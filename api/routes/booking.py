@@ -87,26 +87,3 @@ def delete_user_itinerary(user_id, itinerary_id):
     db.session.commit()
 
     return jsonify({'message': 'Itinerary unbooked successfully'}), 200
-
-@user_itinerary_bp.route('/users/<int:user_id>/itineraries/<int:itinerary_id>', methods=['PUT'])
-def update_user_itinerary(user_id, itinerary_id): 
-    user = User.query.get(user_id)
-    itinerary = Itinerary.query.get(itinerary_id)
-
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-
-    if not itinerary:
-        return jsonify({'error': 'Itinerary not found'}), 404
-
-    if itinerary not in user.itineraries:
-        return jsonify({'error': 'Itinerary not booked by user'}), 404
-
-    data = request.get_json()
-    for field in ['type', 'name', 'start', 'destination', 'departure_time', 'arrival_time']:
-        if field in data:
-            setattr(itinerary, field, data[field])
-
-    db.session.commit()
-
-    return jsonify({'message': 'Itinerary updated successfully'}), 200
