@@ -81,3 +81,17 @@ def delete_itinerary(itinerary_id):
     db.session.commit()
 
     return jsonify({'message': 'Itinerary deleted successfully'}), 200
+
+@itinerary_bp.route('/itineraries/<int:itinerary_id>', methods=['PUT'])
+def update_itinerary(itinerary_id):
+    itinerary = Itinerary.query.get(itinerary_id)
+    if not itinerary:
+        return jsonify({'error': 'Itinerary not found'}), 404
+
+    data = request.get_json()
+    for field in ['type', 'name', 'description', 'image', 'url', 'start', 'destination', 'departure_time', 'arrival_time', 'price']:
+        if field in data:
+            setattr(itinerary, field, data[field])
+
+    db.session.commit()
+    return jsonify({'message': 'Itinerary updated successfully'}), 200
