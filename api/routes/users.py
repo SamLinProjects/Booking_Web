@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models.models import User
+from extensions import bcrypt
 from db import db
-from passlib.hash import bcrypt
 
 user_bp = Blueprint('users', __name__)
 
@@ -18,7 +18,7 @@ def create_user():
     if User.query.filter_by(username=username).first():
         return jsonify({'error': 'User already exists'}), 409
 
-    hashed_password = bcrypt.hash(password)
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
     new_user = User(username=username, password_hash=hashed_password)
 
     db.session.add(new_user)

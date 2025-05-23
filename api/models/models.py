@@ -25,3 +25,15 @@ class Itinerary(db.Model):
     departure_time = db.Column(db.DateTime)
     arrival_time = db.Column(db.DateTime)
     price = db.Column(db.Float)
+
+class TokenBlacklist(db.Model): 
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(36), unique=True, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+class RefreshToken(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(255), unique=True, nullable=False)  # JWT ID
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    revoked = db.Column(db.Boolean, default=False)
