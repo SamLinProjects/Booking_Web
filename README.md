@@ -27,6 +27,9 @@ to start backend, you need you set up a local postgreSQL database
     ```env
     SQLALCHEMY_DATABASE_URI=postgresql://<username>:<password>@localhost:5432/<databasename>
     SECRET_KEY=supersecretkey
+    SECRET_KEY=supersecretkey
+    JWT_ACCESS_TOKEN_EXPIRES=           # in seconds
+    JWT_REFRESH_TOKEN_EXPIRES=          # in seconds
     ```
 4. create table
     ```bash 
@@ -70,6 +73,61 @@ curl -X PUT http://localhost:5000/itineraries/<id> \
   "price": 980.0
 }'
 ```
+
+## Authentication
+
+Authentication in this project is handled using JWT (JSON Web Tokens). Users must register and log in to receive a token, which is then used to access protected API endpoints.
+
+### Register a New User
+
+Send a POST request to the `/register` endpoint with a username and password:
+
+```bash
+curl -X POST http://127.0.0.1:5000/register \
+-H "Content-Type: application/json" \
+-d '{
+  "username": "your_username",
+  "password": "your_password"
+}'
+```
+
+### Login
+
+Send a POST request to the `/login` endpoint with your credentials to receive an access and refresh token:
+
+```bash
+curl -X POST http://127.0.0.1:5000/login \
+-H "Content-Type: application/json" \
+-d '{
+  "username": "your_username",
+  "password": "your_password"
+}'
+```
+
+The response will include `access_token` and `refresh_token`.
+
+### Access Protected Endpoints
+
+Include the access token in the `Authorization` header as a Bearer token:
+
+```bash
+curl -X GET http://127.0.0.1:5000/protected \
+-H "Authorization: Bearer <access_token>"
+```
+
+### Refresh Token
+
+When the access token expires, use the refresh token to obtain a new access token:
+
+```bash
+curl -X POST http://127.0.0.1:5000/refresh \
+-H "Authorization: Bearer <refresh_token>"
+```
+
+### Notes
+
+- Tokens expire after a configurable time (see `.env`).
+- Update the `.env` file with your own secret keys for production use.
 
 ## Getting Started
 
