@@ -27,7 +27,24 @@ def register():
 
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({'message': 'User created successfully'}), 201
+
+    access_token = create_access_token(identity=new_user.id)
+    refresh_token = create_refresh_token(identity=new_user.id)
+
+    jti = decode_token(refresh_token)["jti"]
+    refresh = RefreshToken(jti=jti, user_id=new_user.id)
+    db.session.add(refresh)
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to create user'}), 500
+    
+    return jsonify({
+        'message': 'User created successfully', 
+        'access_token': access_token,
+        'refresh_token': refresh_token
+    }), 201
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
@@ -41,6 +58,15 @@ def login():
     
     access_token = create_access_token(identity=user.id)
     refresh_token = create_refresh_token(identity=user.id)
+
+    jti = decode_token(refresh_token)["jti"]
+    refresh = RefreshToken(jti=jti, user_id=user.id)
+    db.session.add(refresh)
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to create refresh token'}), 500
 
     return jsonify({
         'access_token': access_token, 

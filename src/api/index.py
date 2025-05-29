@@ -22,16 +22,16 @@ bcrypt.init_app(app)
 db.init_app(app)
 
 from routes.users import user_bp
-app.register_blueprint(user_bp)
+app.register_blueprint(user_bp, url_prefix='/api')
 
 from routes.itineraries import itinerary_bp
-app.register_blueprint(itinerary_bp)
+app.register_blueprint(itinerary_bp, url_prefix='/api')
 
 from routes.booking import user_itinerary_bp
-app.register_blueprint(user_itinerary_bp)
+app.register_blueprint(user_itinerary_bp, url_prefix='/api')
 
 from routes.auth import auth_bp
-app.register_blueprint(auth_bp)
+app.register_blueprint(auth_bp, url_prefix='/api')
 
 with app.app_context():
     db.create_all()
