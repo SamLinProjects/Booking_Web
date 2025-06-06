@@ -1,5 +1,5 @@
 "use client";
-import Lan_Button from "../components/ui/Lan_Button";
+import Lan_Button from "./ui/Lan_Button";
 
 export default function Header(){
     const handlechange = (page) => {
