@@ -1,6 +1,8 @@
+"use client";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Providers from "./Providers";
 import Footer from "@/src/components/Footer";
 import Header from "@/src/components/Header";
 
@@ -22,9 +24,13 @@ export default function RootLayout({
     return (
         <html lang="en">
         <body className={`${inter.variable} antialiased`}>
+            <Providers>
             <Header />
+            <div className="mt-16 relative flex size-full min-h-screen flex-col bg-[#111811] dark group/design-root overflow-x-hidden">
                 {children}
+            </div>
             <Footer />
+            </Providers>
         </body>
         </html>
     );
