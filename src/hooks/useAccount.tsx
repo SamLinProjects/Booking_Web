@@ -26,8 +26,10 @@ export default function useAccount() {
                 localStorage.setItem('refresh_token', data.refresh_token);
                 console.log("Access Token:", data.access_token);
                 console.log("Refresh Token:", data.refresh_token);
+                window.dispatchEvent(new Event('authChange'));
                 alert("Registration successful!");
                 router.refresh();
+                return res.ok;
             } else {
                 alert("Registration failed: " + data.message);
                 throw new Error(data.message);
@@ -58,9 +60,10 @@ export default function useAccount() {
             if (data.access_token) {
                 localStorage.setItem('access_token', data.access_token);
                 localStorage.setItem('refresh_token', data.refresh_token);
-                alert("Login successful!");
                 console.log("Access Token:", data.access_token);
                 console.log("Refresh Token:", data.refresh_token);
+                window.dispatchEvent(new Event('authChange'));
+                alert("Login successful!");
                 router.refresh();
                 return res.ok;
             } else {
@@ -119,6 +122,7 @@ export default function useAccount() {
                 localStorage.setItem('access_token', data.access_token);
                 alert("Token refreshed successfully!");
                 console.log("New Access Token:", data.access_token);
+                return res.ok;
             } else {
                 alert("Failed to refresh token: " + data.message);
             }
@@ -147,8 +151,10 @@ export default function useAccount() {
             if (data.message) {
                 localStorage.removeItem('access_token');
                 localStorage.removeItem('refresh_token');
+                window.dispatchEvent(new Event('authChange'));
                 alert("Logout successful!");
                 router.refresh();
+                return res.ok;
             } else {
                 alert("Logout failed: " + data.message);
             }

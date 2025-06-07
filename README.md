@@ -83,7 +83,7 @@ Authentication in this project is handled using JWT (JSON Web Tokens). Users mus
 Send a POST request to the `/register` endpoint with a username and password:
 
 ```bash
-curl -X POST http://127.0.0.1:5000/register \
+curl -X POST http://127.0.0.1:5000/api/register \
 -H "Content-Type: application/json" \
 -d '{
   "username": "your_username",
@@ -96,7 +96,7 @@ curl -X POST http://127.0.0.1:5000/register \
 Send a POST request to the `/login` endpoint with your credentials to receive an access and refresh token:
 
 ```bash
-curl -X POST http://127.0.0.1:5000/login \
+curl -X POST http://127.0.0.1:5000/api/login \
 -H "Content-Type: application/json" \
 -d '{
   "username": "your_username",
@@ -111,7 +111,7 @@ The response will include `access_token` and `refresh_token`.
 Include the access token in the `Authorization` header as a Bearer token:
 
 ```bash
-curl -X GET http://127.0.0.1:5000/protected \
+curl -X GET http://127.0.0.1:5000/api/protected \
 -H "Authorization: Bearer <access_token>"
 ```
 
@@ -120,7 +120,7 @@ curl -X GET http://127.0.0.1:5000/protected \
 When the access token expires, use the refresh token to obtain a new access token:
 
 ```bash
-curl -X POST http://127.0.0.1:5000/refresh \
+curl -X POST http://127.0.0.1:5000/api/refresh \
 -H "Authorization: Bearer <refresh_token>"
 ```
 
