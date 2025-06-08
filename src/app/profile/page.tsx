@@ -3,8 +3,9 @@ import React from "react";
 import { useEffect, useState, useMemo, useRef } from "react";
 
 export default function Page(){
-    const [activeTab, setActiveTab] = useState("profile");
-    const tabs = [
+    type TabKey = 'profile' | 'user_account' | 'other_account';
+    const [activeTab, setActiveTab] = useState<TabKey>("profile");
+    const tabs: { id: TabKey; label: string }[] = [
       { id: "profile", label: "Personal Profile" },
       { id: "user_account", label: "My Account" },
       { id: "other_account", label: "Connected Accounts" },
