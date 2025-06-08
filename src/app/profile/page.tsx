@@ -1,4 +1,5 @@
 "use client";
+import { list } from "postcss";
 import React from "react";
 import { useEffect, useState, useMemo, useRef } from "react";
 
@@ -60,19 +61,22 @@ export default function Page(){
 
 /*再來是一些這個頁面的元件，將Button, Input, Form 針對此頁面做了一些小調整
   預計會用PForm 來操作、修改個人資料    */
-
+type PFormProps={
+  subject?:string
+  formdata?:(PInputProps & { id: string })[]
+};
 
 function PForm({
   subject="",
   formdata=[],
-}){
+}:PFormProps){
 
   /*根據formdata裡的item，生出一個 {item.id = ""} 的字典，是為initFormData*/
-  const initFormData = useMemo(() => {
+  const initFormData = useMemo<Record<string, string>>(() => {
     return formdata.reduce((acc, item) => {
       acc[item.id] = "";
       return acc;
-    }, {});
+    }, {} as Record<string, string>);
   }, [formdata]);
   
   const [formData, setFormData] = useState(initFormData);
@@ -81,21 +85,21 @@ function PForm({
     setFormData(initFormData);
   }, [initFormData]);
 
-  const handleChange = (value,name) => {
+  const handleChange = (value:string,name:string) => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("儲存資料：", subject, formData);
   };
   /*按下ENTER會換行*/
-  const inputRefs = useRef([]);
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
-  const handleKeyDown = (index) => (e) => {
+  const handleKeyDown = (index:number) => (e:React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
       const next = inputRefs.current[index + 1];
@@ -108,7 +112,7 @@ function PForm({
       {formdata.map((tab,i) => (
       <PInput
       key={tab.id}
-      ref={(el) => (inputRefs.current[i] = el)}
+      inputRef={(el) => (inputRefs.current[i] = el)}
       onKeyDown={handleKeyDown(i)}
       label={tab.label || tab.id}
       value={formData[tab.id]||""}
@@ -123,12 +127,22 @@ function PForm({
   );
 }
 
+type PInputProps = {
+  label?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  placeholder?: string;
+  type?: string;
+  inputRef?: React.Ref<HTMLInputElement>;
+};
+
 function PInput({
-  label = "",         value,
-  onChange,           onKeyDown = ()=>{},
+  label = "",         value = "",
+  onChange= ()=>{},           onKeyDown = ()=>{},
   placeholder = "",   type = "text",
-  ref = ""
-}){
+  inputRef
+}:PInputProps){
   return(
   <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
     <label className="flex flex-col min-w-40 flex-1">
@@ -137,16 +151,22 @@ function PInput({
         className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 
         focus:ring-0 border-none bg-[#283928] focus:border-none h-14 placeholder:text-[#9cba9c] p-4 text-base font-normal"
         value={value}  placeholder = {placeholder}  type = {type}
-        onChange={onChange}  onKeyDown = {onKeyDown}  ref = {ref}
+        onChange={onChange}  onKeyDown = {onKeyDown}  ref = {inputRef}
       />
     </label>
   </div>
   )
 }
 
+type PButtonProps = {
+  type?: "submit" | "button" | "reset";      
+  text?: string;      
+  onClick?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
 function PButton({
   type="submit",      text="Save Changes",      onClick=()=>{},
-}){
+}:PButtonProps){
 
 const [clicked, setClicked] = useState(false);
 const [fade, setFade] = useState(false);
