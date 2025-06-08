@@ -5,8 +5,9 @@ import Items from "@/src/components/Items"
 
 export default function Page(){
 
-  const [activeTab, setActiveTab] = useState("Coming_Journeys");
-  const tabs = [
+  type ClassKey = 'Coming_Journeys' | 'Trip_Memories' | 'Booking_History';
+  const [activeTab, setActiveTab] = useState<ClassKey>("Coming_Journeys");
+  const tabs: {id : ClassKey, label:string}[] = [
     { id: "Coming_Journeys", label: "Coming Journeys" },
     { id: "Trip_Memories", label: "Trip Memories" },
     { id: "Booking_History", label: "Booking History" },
@@ -24,7 +25,7 @@ export default function Page(){
   };
 
 return(
-  <div className="layout-container flex h-full grow flex-col">
+  <div className="layout-container flex h-full grow flex-col pt-16">
   <div className="px-40 flex flex-1 justify-center py-5">
   <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
 
@@ -46,9 +47,9 @@ return(
         </button>))}
     </div>
     </div>
-    {/* {classes[activeTab].map((c) => (
+    { classes[activeTab].map((c) => (
       <Class name={c.id} description={c.description} key={c.id}/>
-    ))} */}
+    ))}
   </div>
   </div>
   </div>
