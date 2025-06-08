@@ -1,19 +1,23 @@
-from base import BaseCrawler
+from base import SeleniumCrawler
 from bs4 import BeautifulSoup
 
-class KKDayCrawler(BaseCrawler):
-    def search(self, keyword): 
-        url = f"https://www.kkday.com/zh-tw/category/{keyword}/day-tours/list"
+class KKDayCrawler(SeleniumCrawler):
+    def search(self, contry, city, keyword): 
+        url = f"https://www.kkday.com/zh-tw/category/{contry}-{city}/{keyword}/list"
+        print(f"Fetching URL: {url}")
         html = self.fetch(url)
         return self.parse(html)
     
     def parse(self, html):
         soup = BeautifulSoup(html, 'html.parser')
+        items = soup.select('.product-listview')
         results = []
-        for item in soup.select('.prouct-item'): 
-            title = item.select_one('.product-title').get_text(strip=True)
-            price = item.select_one('.product-price').get_text(strip=True)
+
+        for item in items: 
+            title = item.select_one('span.product-listview__name').get_text(strip=True)
+            price = int(''.join(filter(str.isdigit, item.select_one('div.kk-price-local__normal').get_text(strip=True))))
             link = item.select_one('a')['href']
+
             results.append({
                 'title': title,
                 'price': price,

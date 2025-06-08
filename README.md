@@ -34,6 +34,7 @@ to start backend, you need you set up a local postgreSQL database
 4. create table
     ```bash 
     cd api
+    pip install -r requirements.txt
     python index.py
     ```
     then you can go back to postgresql to check the tables
@@ -83,7 +84,7 @@ Authentication in this project is handled using JWT (JSON Web Tokens). Users mus
 Send a POST request to the `/register` endpoint with a username and password:
 
 ```bash
-curl -X POST http://127.0.0.1:5000/register \
+curl -X POST http://127.0.0.1:5000/api/register \
 -H "Content-Type: application/json" \
 -d '{
   "username": "your_username",
@@ -96,7 +97,7 @@ curl -X POST http://127.0.0.1:5000/register \
 Send a POST request to the `/login` endpoint with your credentials to receive an access and refresh token:
 
 ```bash
-curl -X POST http://127.0.0.1:5000/login \
+curl -X POST http://127.0.0.1:5000/api/login \
 -H "Content-Type: application/json" \
 -d '{
   "username": "your_username",
@@ -111,7 +112,7 @@ The response will include `access_token` and `refresh_token`.
 Include the access token in the `Authorization` header as a Bearer token:
 
 ```bash
-curl -X GET http://127.0.0.1:5000/protected \
+curl -X GET http://127.0.0.1:5000/api/protected \
 -H "Authorization: Bearer <access_token>"
 ```
 
@@ -120,14 +121,57 @@ curl -X GET http://127.0.0.1:5000/protected \
 When the access token expires, use the refresh token to obtain a new access token:
 
 ```bash
-curl -X POST http://127.0.0.1:5000/refresh \
+curl -X POST http://127.0.0.1:5000/api/refresh \
 -H "Authorization: Bearer <refresh_token>"
 ```
 
-### Notes
+## Notes
 
 - Tokens expire after a configurable time (see `.env`).
 - Update the `.env` file with your own secret keys for production use.
+
+## Crawler by samklin33
+### Install dependancies
+
+```bash
+cd src/crawler
+pip install -r requirements.txt
+```
+
+### Crawler function
+
+Crawler code is in `src/crawler/` directory
+```
+src/crawler/
+├── __init__.py         # initialization
+├── requirements.txt    # Python dependencies for the crawler
+├── temp.py             # Example usage script
+├── kkday.py            # Crawler for kkday
+└── base_crawler.py     # Abstract base class for all crawlers
+```
+
+### Start crawling
+
+Only crawler for kkday is done so far, you can crawl kkday by executing `/src/crawler/temp.py` now.
+```py
+# src/crawler/temp.py
+from kkday import KKDayCrawler
+
+if __name__ == "__main__": 
+    # since the search url in kkday is "www.kkday.com/<language>/category/<contry>-<city>/<product-category>/list"
+    contry  = "jp"          # contry
+    city = "tokyo"          # city
+    keyword = "day-tours"   # product-category
+
+    crawler = KKDayCrawler()
+    results = crawler.search(contry, city, keyword)
+
+    print(f"Found {len(results)} results:\n")
+    if not results:
+        print("No results found.")
+    for result in results: 
+        print(f"{result}\n")
+```
 
 ## Getting Started
 
