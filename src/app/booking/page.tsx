@@ -46,9 +46,9 @@ return(
         </button>))}
     </div>
     </div>
-    {classes[activeTab].map((c) => (
+    {/* {classes[activeTab].map((c) => (
       <Class name={c.id} description={c.description} key={c.id}/>
-    ))}
+    ))} */}
   </div>
   </div>
   </div>

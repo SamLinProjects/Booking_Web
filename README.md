@@ -34,6 +34,7 @@ to start backend, you need you set up a local postgreSQL database
 4. create table
     ```bash 
     cd api
+    pip install -r requirements.txt
     python index.py
     ```
     then you can go back to postgresql to check the tables
@@ -124,7 +125,7 @@ curl -X POST http://127.0.0.1:5000/api/refresh \
 -H "Authorization: Bearer <refresh_token>"
 ```
 
-### Notes
+## Notes
 
 - Tokens expire after a configurable time (see `.env`).
 - Update the `.env` file with your own secret keys for production use.
