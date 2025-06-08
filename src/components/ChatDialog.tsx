@@ -3,7 +3,7 @@ import Bubble from './SpeechBubble';
 
 export default function ChatDialog() {
     return (
-        <div className="fixed bottom-4 right-13 z-25 transition-all px-4 py-2 max-w-[600px]">
+        <div className="fixed bottom-4 right-20 z-25 transition-all px-4 py-2 max-w-[600px]">
         <div className="layout-container flex flex-col w-[600px] h-[400px] bg-[#445244] text-white shadow-lg rounded-xl px-6 py-4 animate-fadeIn transition-all relative">
             <div className="flex flex-wrap justify-between gap-3 py-4">
                 <p className="text-white tracking-light text-[24px] font-bold leading-tight w-36">
@@ -54,7 +54,7 @@ export default function ChatDialog() {
                                     </svg>
                                 </div>
                             </button>
-                            <button className="min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 bg-[#09b809] text-white text-sm font-medium leading-normal">
+                            <button className="min-w-[84px] cursor-pointer overflow-hidden rounded-full h-8 px-4 bg-[#c98402] text-white text-sm font-medium leading-normal hover:bg-[#d99748]">
                                 <span className="truncate">Send</span>
                             </button>
                         </div>
