@@ -1,8 +1,8 @@
 from kkday import KKDayCrawler
 
 if __name__ == "__main__": 
-    contry  = "tw"
-    city = "taipei"
+    contry  = "jp"
+    city = "tokyo"
     keyword = "day-tours"
 
     crawler = KKDayCrawler()
