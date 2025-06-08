@@ -54,7 +54,7 @@ export default function ChatDialog() {
                                     </svg>
                                 </div>
                             </button>
-                            <button className="min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 bg-[#09b809] text-white text-sm font-medium leading-normal">
+                            <button className="min-w-[84px] cursor-pointer overflow-hidden rounded-full h-8 px-4 bg-[#c98402] text-white text-sm font-medium leading-normal hover:bg-[#d99748]">
                                 <span className="truncate">Send</span>
                             </button>
                         </div>
