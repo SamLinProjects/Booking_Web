@@ -130,6 +130,49 @@ curl -X POST http://127.0.0.1:5000/api/refresh \
 - Tokens expire after a configurable time (see `.env`).
 - Update the `.env` file with your own secret keys for production use.
 
+## Crawler by samklin33
+### Install dependancies
+
+```bash
+cd src/crawler
+pip install -r requirements.txt
+```
+
+### Crawler function
+
+Crawler code is in `src/crawler/` directory
+```
+src/crawler/
+├── __init__.py         # initialization
+├── requirements.txt    # Python dependencies for the crawler
+├── temp.py             # Example usage script
+├── kkday.py            # Crawler for kkday
+└── base_crawler.py     # Abstract base class for all crawlers
+```
+
+### Start crawling
+
+Only crawler for kkday is done so far, you can crawl kkday by executing `/src/crawler/temp.py` now.
+```py
+# src/crawler/temp.py
+from kkday import KKDayCrawler
+
+if __name__ == "__main__": 
+    # since the search url in kkday is "www.kkday.com/<language>/category/<contry>-<city>/<product-category>/list"
+    contry  = "jp"          # contry
+    city = "tokyo"          # city
+    keyword = "day-tours"   # product-category
+
+    crawler = KKDayCrawler()
+    results = crawler.search(contry, city, keyword)
+
+    print(f"Found {len(results)} results:\n")
+    if not results:
+        print("No results found.")
+    for result in results: 
+        print(f"{result}\n")
+```
+
 ## Getting Started
 
 First, install the dependencies:
