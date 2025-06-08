@@ -59,7 +59,7 @@ export default function page() {
     }
 
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-[#1e2b1e] text-white bg-cover bg-center bg-no-repeat saturate-50" 
+      <main className="pt-16 flex min-h-screen flex-col items-center justify-center p-24 bg-[#1e2b1e] text-white bg-cover bg-center bg-no-repeat saturate-50" 
       style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' ,backgroundImage: 'linear-gradient(rgba(30, 43, 30, 0.8), rgba(30, 43, 30, 0.9)), url("/images/background.jpg")'}}>
           <div className="flex flex-col items-center justify-center flex-1 w-full p-2">
               <h1 className="text-white tracking-wider text-[50px] font-bold leading-tight px-4 text-center pb-3 pt-5 ">{isRegister ? "Register" : isLogin ? "Welcome" : "Login"}</h1>
