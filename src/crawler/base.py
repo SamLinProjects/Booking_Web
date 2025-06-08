@@ -5,10 +5,18 @@ from requests.exceptions import RequestException
 class BaseCrawler:
     def __init__(self):
         self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3", 
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
         }
         self.timeout = 10  # seconds
         self.max_retries = 3
+
+    def warmup(self):
+        try: 
+            self.session.get("https://www.kkday.com/zh-tw/", headers=self.headers, timeout=self.timeout)
+        except:
+            print("Warmup failed, continuing without it.")
+            pass
 
     def fetch(self, url, params=None):
         for attempt in range(self.max_retries): 

@@ -1,8 +1,12 @@
 from kkday import KKDayCrawler
 
 if __name__ == "__main__": 
+    contry  = "tw"
+    city = "taipei"
+    keyword = "day-tours"
+
     crawler = KKDayCrawler()
-    results = crawler.search("taipei")
+    results = crawler.search(contry, city, keyword)
 
     print(f"Found {len(results)} results:\n")
     if not results:
