@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 class KKDayCrawler(SeleniumCrawler):
     def search(self, contry, city, keyword): 
         url = f"https://www.kkday.com/zh-tw/category/{contry}-{city}/{keyword}/list"
-        print(f"Fetching URL: {url}")
         html = self.fetch(url)
         return self.parse(html)
     
