@@ -33,6 +33,9 @@ app.register_blueprint(user_itinerary_bp, url_prefix='/api')
 from .routes.auth import auth_bp
 app.register_blueprint(auth_bp, url_prefix='/api')
 
+from .routes.mcp import mcp_bp
+app.register_blueprint(mcp_bp, url_prefix='/api')
+
 with app.app_context():
     db.create_all()
 
