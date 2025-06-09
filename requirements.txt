@@ -12,3 +12,4 @@ flask-bcrypt
 psycopg2-binary
 python-dotenv
 passlib
+openai

@@ -28,17 +28,15 @@ export default function Home() {
 
     <main className="pt-16 relative flex size-full min-h-screen flex-col dark group/design-root overflow-x-hidden"
         style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}>
-        {/* <SnakeGame bgcolor="#111811"/> */}
+        <SnakeGame bgcolor="#111811"/>
         <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat saturate-50 pointer-events-none"
-            style={{
-            backgroundImage: 'linear-gradient(rgba(30, 43, 30, 0.3), rgba(30, 43, 30, 0.4)), url("/images/homepage.png")',
-            zIndex: 10,
-            opacity: 0.35
-        }}/>
-        <button onClick={() => testSearch()} className="mt-12 absolute top-4 right-4 bg-green-900 text-white px-4 py-2 rounded">
-            Test Search
-        </button>
+    className="absolute inset-0 bg-cover bg-center bg-no-repeat saturate-50 pointer-events-none"
+    style={{
+      backgroundImage: 'linear-gradient(rgba(30, 43, 30, 0.3), rgba(30, 43, 30, 0.4)), url("/images/homepage.png")',
+      zIndex: 10,
+      opacity: 0.35
+    }}/>
+
     </main>
     );
 }
