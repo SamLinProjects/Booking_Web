@@ -173,6 +173,8 @@ export default function useItineraries() {
         start_place, 
         end_place,
         adult,
+        child,
+        room,
         budget,
     }: {
         type: string;
@@ -184,6 +186,8 @@ export default function useItineraries() {
         start_place?: string;
         end_place?: string;
         adult?: number;
+        child?: number;
+        room?: number;
         budget?: number;
     }) => {
         try {
@@ -202,7 +206,9 @@ export default function useItineraries() {
                         end_time: end_time,
                         start_place: start_place,
                         end_place: end_place,
-                        adult: adult,
+                        adults: adult,
+                        children: child,
+                        rooms: room,
                         budget: budget
                     }
                 }),

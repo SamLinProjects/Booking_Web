@@ -3,9 +3,16 @@ import Item_Detail from "./Item_Detail";
 
 export default function Items({
     type = "drink",
-    name = "NMLAB",
-    start_time = "2025-06-07",
-    duration = "25 hours",
+    name = "",
+    description = "",
+    image = "",
+    url = "",
+    start_time = "",
+    end_time = "",
+    start_place = "",
+    end_place = "",
+    duration = "",
+    price = "",
 }) {
 
     const [showDetail,setShowDetail]=useState(false);
@@ -54,11 +61,11 @@ export default function Items({
             </div>
             <div className="shrink-0">
                 <p className="text-white text-base font-normal leading-normal">
-                {type}
+                TWD ${price}
                 </p>
             </div>
         </button>
-        {showDetail&& <Item_Detail cancelDisplay={()=>setShowDetail(false)}/>}
+        {showDetail&& <Item_Detail description={description} cancelDisplay={()=>setShowDetail(false)}/>}
         </>
     );
 }
