@@ -183,5 +183,3 @@ if __name__ == "__main__":
     start_time = "2025-06-10,19:00"
     start_place = "台北"
     end_place = "左營"
-    
-

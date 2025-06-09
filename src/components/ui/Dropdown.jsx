@@ -27,14 +27,17 @@ export default function Dropdown({
           setSearchTerm('');
         }
       };
+      console.log(value);
   
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
   
-    const handleSelect = (option) => {
-      onChange(option.value);
+    const handleSelect = async (option) => {
+      console.log("選擇的值:", option.value);
+      await onChange(option.value);
       setIsOpen(false);
+      console.log("value:", value);
       setSearchTerm(option.label);
     };
   
