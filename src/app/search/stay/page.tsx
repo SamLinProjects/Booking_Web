@@ -75,18 +75,21 @@ export default function Page() {
       // 讓 cities 的 key 只能是 CountryCode 中的值
       const cities: Record<CountryCode, CityOption[]> = {
         tw:[
-        { value: 'taipei', label: '台北' },
-        { value: 'taichung', label: '台中' },
-        { value: 'kaoshiung', label: '高雄' },],
+        { value: 'Taipei', label: '台北' },
+        { value: 'Taichung', label: '台中' },
+        { value: 'Kaoshiung', label: '高雄' },
+        { value: 'Tainan', label: '台南' },
+        { value: "Yilan County", label: '宜蘭'},
+        { value: "Taitung", label: '台東'}],
         jp:[
-        { value: 'tokyo', label: '東京' },
-        { value: 'okinawa', label: '沖繩' },
-        { value: 'hokkaido', label: '北海道' },
+        { value: 'Tokyo', label: '東京' },
+        { value: 'Okinawa', label: '沖繩' },
+        { value: 'Hokkaido', label: '北海道' },
         ],
         ch:[
-        { value: 'shanhai', label: '上海' },
-        { value: 'beijing', label: '北京' },
-        { value: 'hongkong', label: '香港' },
+        { value: 'Shanhai', label: '上海' },
+        { value: 'Beijing', label: '北京' },
+        { value: 'Hongkong', label: '香港' },
         ],
     }
 
