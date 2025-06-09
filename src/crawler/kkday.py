@@ -2,11 +2,11 @@ from .base import SeleniumCrawler
 from bs4 import BeautifulSoup
 
 class KKDayCrawler(SeleniumCrawler):
-    def search(self, contry, city, keyword, start_date=None, end_date=None): 
-        url = f"https://www.kkday.com/zh-tw/category/{contry}-{city}/{keyword}/list"
+    def search(self, country, city, keyword, start_time=None, end_time=None): 
+        url = f"https://www.kkday.com/zh-tw/category/{country}-{city}/{keyword}/list"
         params = {
-            'sale_date_from': start_date,
-            'sale_date_to': end_date,
+            'sale_date_from': start_time,
+            'sale_date_to': end_time,
         }
         html = self.fetch(url, params)
         return self.parse(html)
