@@ -10,33 +10,41 @@ export default function Page() {
     const [activeTab, setActiveTab] = useState<TabKey>("stays");
 
     const formdata_Stay = [
-        { id: "location", label: "location", placeholder: "which city to stay" },
-        { id: "people", label: "people", placeholder: "how many people to stay" },
-        { id: "date", label: "date", placeholder: "when to stay"},
-        { id: "budget", label: "budget", placeholder: "how much do you like to spend"}
+        { id: "location", label: "location", placeholder: "City you'd like to stay in" },
+        { id: "people", label: "people", placeholder: "Number of people joining" },
+        { id: "date", label: "date", placeholder: "Preferred travel dates"},
+        { id: "budget", label: "budget", placeholder: "Rough budget range (optional)"}
     ];
     const formdata_Flight = [
-        { id: "departure", label: "departure", placeholder: "the origin of your trip" },
-        { id: "destination", label: "destination", placeholder: "the destination of the flight" },
-        { id: "date", label: "date", placeholder: "when to fly"},
-        { id: "people", label: "people", placeholder:"how many seat to book"}
+        { id: "departure", label: "departure", placeholder: "Starting point of your trip" },
+        { id: "destination", label: "destination", placeholder: "Place you’re heading to" },
+        { id: "date", label: "date", placeholder: "Travel date you have in mind"},
+        { id: "people", label: "people", placeholder:"Number of seats needed"}
     ];
     const formdata_Food = [
-        { id: "location", label: "location", placeholder: "restaurants at which city" },
-        { id: "people", label: "people", placeholder: "what kind of food" },
-        { id: "date", label: "date", placeholder: "when to eat"},
-        { id: "budget", label: "budget", placeholder: "how much do you like to spend"}
+        { id: "location", label: "location", placeholder: "City you’re eating in" },
+        { id: "people", label: "people", placeholder: "Type of food you’re craving" },
+        { id: "date", label: "date", placeholder: "Day or time you’re thinking of"},
+        { id: "budget", label: "budget", placeholder: "Budget range (optional)"}
+    ];
+    const formdata_Ticket = [
+        { id: "location", label: "location", placeholder: "City you want to explore" },
+        { id: "people", label: "people", placeholder: "Number of people going" },
+        { id: "date", label: "date", placeholder: "Preferred travel dates"},
+        { id: "budget", label: "budget", placeholder: "Budget range (optional)"}
     ];
 
     const tabs:{id:TabKey, label:string}[] = [
         { id: "stays", label: "Stays" },
         { id: "flights", label: "Flights" },
         { id: "food", label: "Food" },
+        { id: "tickets", label: "Tickets" },
     ];
     const componentsMap = {
         stays: <Form subject="Stay" formdata={formdata_Stay}/>,
-        flights: <Form subject="Flight" formdata={formdata_Flight}/>,
+        flights: <Form subject="Transportation" formdata={formdata_Flight}/>,
         food: <Form subject="Food" formdata={formdata_Food}/>,
+        tickets: <Form subject="Tickets" formdata={formdata_Ticket}/>,
     } as const;
 
     return(
@@ -62,7 +70,12 @@ export default function Page() {
           </div>
           </div>
           {componentsMap[activeTab] || <Form subject="Stay" formdata={formdata_Stay}/>}
-          <Items type="activity" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
+          <Items type="transport" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
+          <Items type="car" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
+          <Items type="airline" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
+          <Items type="ticket" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
+          <Items type="attraction" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
+          <Items type="stay" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
         </div>
         </div>
         </div>
@@ -77,6 +90,7 @@ type FormProp = {
     subject?:string
     formdata:formdataProp[]
 };
+
 
 function Form({
   subject="",
