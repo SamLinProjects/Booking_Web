@@ -127,7 +127,7 @@ export default function Page() {
         {isLoading && <Loading size="xl"/>}
         {!isLoading && searchResults.length > 0 && (
             searchResults.map((item, index) => (
-                <Item type="stay" name={item.title} description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
+                <Item type="stay" source="search" name={item.title} description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
             ))
         )}
         </>

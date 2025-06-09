@@ -52,6 +52,7 @@ export default function useItineraries() {
             // console.log("Itinerary posted.");
             // alert("Itinerary posted successfully!");
             router.refresh();
+            return await res.json();
         } catch (error) {
             console.error("Error during posting itinerary:", error);
             // alert("An error occurred while posting the itinerary. Please try again.");
