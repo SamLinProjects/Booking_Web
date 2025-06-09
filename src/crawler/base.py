@@ -11,7 +11,7 @@ import random
 class SeleniumCrawler:
     def __init__(self, headless=True):        
         options = Options()
-        options.binary_location = '/usr/bin/google-chrome'
+        # options.binary_location = "/Applications/Google"
 
         if headless:
             options.add_argument("--headless")

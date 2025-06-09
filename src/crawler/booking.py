@@ -29,10 +29,10 @@ class BookingCrawler(SeleniumCrawler):
 
         for item in items: 
             title = item.select_one('[data-testid="title"]').get_text(strip=True)
-            description_elem = item.select_one('[data-testid="subtitle"]')
+            description_elem = item.select_one('[role="link"]')
             if description_elem:
                 description = description_elem.get_text(strip=True)
-            else: 
+            else:
                 description = ''
             image = item.select_one('[data-testid="image"]')['src']
             link = item.select_one('a')['href']
