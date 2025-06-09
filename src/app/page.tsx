@@ -7,18 +7,19 @@ export default function Home() {
     const { searchItineraries } = useItineraries();
 
     const testSearch = async () => {
-        const type = 'inline';
-        const dateTime = "2025-01-01T12";
-        const adult = 2;
-        const city = 'Taipei';
-        const budget = 2;
+        const type = 'TWR';
+        const start_time = "2025-10-01,10:30";
+        const end_time = "2025-10-01,12:30";
+        const start_place = "臺北"
+        const end_place = "高雄";
+
 
         const res = await searchItineraries({
             type: type,
-            city: city,
-            start_time: dateTime,
-            adult: adult,
-            budget: budget,
+            start_time: start_time,
+            end_time: end_time,
+            start_place: start_place,
+            end_place: end_place,
         });
         console.log("Search results:");
     }
