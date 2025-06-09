@@ -198,7 +198,6 @@ def main():
 if __name__ == "__main__":
     # main()
     crawler = TaiwanRailwayCrawler()
-    results = crawler.search("臺北", "中壢", "1", "20250610", "1", [
-                             "00:00", "23:59"], "1")
+    results = crawler.search("2025-06-10,10:30", "2025-06-10,12:30", "臺北", "高雄")
     for result in results:
         print(result)
