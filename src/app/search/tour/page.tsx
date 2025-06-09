@@ -4,21 +4,18 @@ import useItineraries from "@/src/hooks/useItineraries";
 import Input from "@/src/components/ui/Input";
 import Loading from "@/src/components/ui/Loading";
 import Item from "@/src/components/ui/Items";
-import Dropdown from "@/src/components/ui/Dropdown"
-import Button from "@/src/components/ui/Button"
+import { start } from "repl";
 
 export default function Page() {
     const { searchItineraries } = useItineraries();
     const [ searchResults, setSearchResults ] = useState<any[]>([]);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
 
+    const [ keyword, setKeyword ] = useState<string>("");
     const [ country, setCountry ] = useState<string>("");
     const [ city, setCity ] = useState<string>("");
     const [ startDate, setStartDate ] = useState<Date>(new Date());
     const [ endDate, setEndDate ] = useState<Date>(new Date());
-    const [ adult, setAdult ] = useState<number>(1);
-    const [ child, setChild ] = useState<number>(0);
-    const [ room, setRoom ] = useState<number>(1);
 
     const handleSearch = async () => {
         if (!country || !city) {
@@ -29,23 +26,21 @@ export default function Page() {
             alert("End date must be after start date.");
             return;
         }
-        if (adult < 1 || room < 1) {
-
+        if (!keyword) {
+            alert("Please enter a keyword to search.");
             return;
         }
 
-        const type = "booking";
+        const type = "kkday";
         setIsLoading(true);
         try {
             const data = await searchItineraries({
                 type: type,
+                keyword: keyword,
                 country: country,
                 city: city,
-                start_time: startDate.toISOString(),
-                end_time: endDate.toISOString(),
-                adult: adult,
-                child: child,
-                room: room
+                start_time: startDate.toISOString().split('T')[0].replace('-', ''), 
+                end_time: endDate.toISOString().split('T')[0].replace('-', '').replace('-', ''),
             });
             if (data) {
                 setSearchResults(data.results || []);
@@ -59,32 +54,25 @@ export default function Page() {
             setSearchResults([]);
         }
     }
-    const fruits = [
-        { value: 'tw', label: '台灣' },
-        { value: 'jp', label: '日本' },
-        { value: 'ch', label: '中國大陸' },
-      ];
 
     return(
         <>
         <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <Dropdown label="Country" value={country} onChange={(e:string) => setCountry(e)} placeholder="Which country are you going to?" options={fruits}/>
+            <Input label="Keyword" type="text" value={keyword} onChange={(e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)} placeholder="What are you looking for?" />
+            <Input label="Country" type="text" value={country} onChange={(e: ChangeEvent<HTMLInputElement>) => setCountry(e.target.value)} placeholder="Which country are you going to?" />
             <Input label="City" type="text" value={city} onChange={(e: ChangeEvent<HTMLInputElement>) => setCity(e.target.value)} placeholder="Which city are you going to?" />
             <div className="flex gap-4">
                 <Input label="Start Date" type="date" value={startDate.toISOString().split('T')[0]} defaultValue={startDate.toISOString().split('T')[0]} onChange={(e: ChangeEvent<HTMLInputElement>) => setStartDate(new Date(e.target.value))} />
                 <Input label="End Date" type="date" value={endDate.toISOString().split('T')[0]} defaultValue={endDate.toISOString().split('T')[0]} onChange={(e: ChangeEvent<HTMLInputElement>) => setEndDate(new Date(e.target.value))} />
             </div>
-            <div className="flex gap-4">
-                <Input label="Adults" type="number" value={adult} onChange={(e: ChangeEvent<HTMLInputElement>) => setAdult(parseInt(e.target.value))} />
-                <Input label="Children" type="number" value={child} onChange={(e: ChangeEvent<HTMLInputElement>) => setChild(parseInt(e.target.value))} />
-                <Input label="Rooms" type="number" value={room} onChange={(e: ChangeEvent<HTMLInputElement>) => setRoom(parseInt(e.target.value))} />
-            </div>
-            <Button onClick={() => handleSearch()} text="Search Stays"/>
+            <button className="mt-4 w-40 bg-green-900 text-white px-4 py-2 rounded" onClick={() => handleSearch()}>
+                Search
+            </button>
         </div>
         {isLoading && <Loading size="xl"/>}
         {!isLoading && searchResults.length > 0 && (
             searchResults.map((item, index) => (
-                <Item type="stay" name={item.title} description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
+                <Item type={keyword === "attraction-tickets" ? "attraction" : "activity"} name={item.title} description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
             ))
         )}
         </>

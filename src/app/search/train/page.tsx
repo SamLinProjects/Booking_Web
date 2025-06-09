@@ -4,8 +4,6 @@ import useItineraries from "@/src/hooks/useItineraries";
 import Input from "@/src/components/ui/Input";
 import Loading from "@/src/components/ui/Loading";
 import Item from "@/src/components/ui/Items";
-import Dropdown from "@/src/components/ui/Dropdown"
-import Button from "@/src/components/ui/Button"
 
 export default function Page() {
     const { searchItineraries } = useItineraries();
@@ -59,16 +57,11 @@ export default function Page() {
             setSearchResults([]);
         }
     }
-    const fruits = [
-        { value: 'tw', label: '台灣' },
-        { value: 'jp', label: '日本' },
-        { value: 'ch', label: '中國大陸' },
-      ];
 
     return(
         <>
         <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <Dropdown label="Country" value={country} onChange={(e:string) => setCountry(e)} placeholder="Which country are you going to?" options={fruits}/>
+            <Input label="Country" type="text" value={country} onChange={(e: ChangeEvent<HTMLInputElement>) => setCountry(e.target.value)} placeholder="Which country are you going to?" />
             <Input label="City" type="text" value={city} onChange={(e: ChangeEvent<HTMLInputElement>) => setCity(e.target.value)} placeholder="Which city are you going to?" />
             <div className="flex gap-4">
                 <Input label="Start Date" type="date" value={startDate.toISOString().split('T')[0]} defaultValue={startDate.toISOString().split('T')[0]} onChange={(e: ChangeEvent<HTMLInputElement>) => setStartDate(new Date(e.target.value))} />
@@ -79,7 +72,9 @@ export default function Page() {
                 <Input label="Children" type="number" value={child} onChange={(e: ChangeEvent<HTMLInputElement>) => setChild(parseInt(e.target.value))} />
                 <Input label="Rooms" type="number" value={room} onChange={(e: ChangeEvent<HTMLInputElement>) => setRoom(parseInt(e.target.value))} />
             </div>
-            <Button onClick={() => handleSearch()} text="Search Stays"/>
+            <button className="mt-4 w-40 bg-green-900 text-white px-4 py-2 rounded" onClick={() => handleSearch()}>
+                Search Stays
+            </button>
         </div>
         {isLoading && <Loading size="xl"/>}
         {!isLoading && searchResults.length > 0 && (
