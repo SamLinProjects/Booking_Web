@@ -36,9 +36,6 @@ export default function Home() {
             zIndex: 10,
             opacity: 0.35
         }}/>
-        <button onClick={() => testSearch()} className="mt-12 absolute top-4 right-4 bg-green-900 text-white px-4 py-2 rounded">
-            Test Search
-        </button>
     </main>
     );
 }

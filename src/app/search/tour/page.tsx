@@ -103,7 +103,7 @@ export default function Page() {
                 <Input label="Start Date" type="date" value={startDate.toISOString().split('T')[0]} defaultValue={startDate.toISOString().split('T')[0]} onChange={(e: ChangeEvent<HTMLInputElement>) => setStartDate(new Date(e.target.value))} />
                 <Input label="End Date" type="date" value={endDate.toISOString().split('T')[0]} defaultValue={endDate.toISOString().split('T')[0]} onChange={(e: ChangeEvent<HTMLInputElement>) => setEndDate(new Date(e.target.value))} />
             </div>
-            <Button onClick={() => handleSearch()} text="Search Stays"/>
+            <Button onClick={() => handleSearch()} text="Search Tour"/>
         </div>
         {isLoading && <Loading size="xl"/>}
         {!isLoading && searchResults.length > 0 && (

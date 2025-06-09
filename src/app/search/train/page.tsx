@@ -5,6 +5,8 @@ import Input from "@/src/components/ui/Input";
 import Loading from "@/src/components/ui/Loading";
 import Item from "@/src/components/ui/Items";
 import Dropdown from "@/src/components/ui/Dropdown";
+import Button from "@/src/components/ui/Button"
+
 
 export default function Page() {
     const { searchItineraries } = useItineraries();
@@ -120,9 +122,7 @@ export default function Page() {
                 <Input label="Departure Time" type="datetime-local" value={formatDateTimeLocal(startDate)} defaultValue={formatDateTimeLocal(startDate)} onChange={(e: ChangeEvent<HTMLInputElement>) => setStartDate(new Date(e.target.value))} />
                 <Input label="Arrival Time" type="datetime-local" value={formatDateTimeLocal(endDate)} defaultValue={formatDateTimeLocal(endDate)} onChange={(e: ChangeEvent<HTMLInputElement>) => setEndDate(new Date(e.target.value))} />
             </div>
-            <button className="mt-4 w-40 bg-green-900 text-white px-4 py-2 rounded" onClick={() => handleSearch()}>
-                Search Stays
-            </button>
+            <Button onClick={() => handleSearch()} text="Search Train"/>
         </div>
         {isLoading && <Loading size="xl"/>}
         {!isLoading && searchResults.length > 0 && (

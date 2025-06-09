@@ -71,7 +71,7 @@ export default function Item_Detail({
             >
                 <span className="truncate">Back</span>
             </button>
-            {isloggedIn && 
+            {isloggedIn && !booked &&
                 <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#283928] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#c5d4c5] hover:text-[#283928] transition-all" 
                     onClick={()=>setBooked(true)}
                 >
