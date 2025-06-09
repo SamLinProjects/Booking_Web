@@ -36,7 +36,6 @@ function Input({
               value={value}
               onChange={onChange}
               placeholder={placeholder}
-              defaultValue={defaultValue}
               className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border-none bg-[#283928] focus:border-none h-full placeholder:text-[#9cba9c] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
               onKeyDown={onKeyDown}
           />
