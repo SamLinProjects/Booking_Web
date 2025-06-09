@@ -69,7 +69,7 @@ function Class({
   <h2 className="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
     {name}
   </h2>
-  <Items/>
+  <Items name="GG" price="200" description="bbbb" url="https://www.youtube.com/watch?v=40eET26aMMA"/>
   <Items/>
 </>
 )}

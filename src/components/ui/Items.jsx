@@ -55,7 +55,7 @@ export default function Items({
                     {name}
                 </p>
                 <p className="text-[#9cba9c] text-sm font-normal leading-normal line-clamp-2">
-                    {start_time} · {duration}
+                {start_time?.slice(0, 10) || ""}· {duration}
                 </p>
                 </div>
             </div>
@@ -65,7 +65,7 @@ export default function Items({
                 </p>
             </div>
         </button>
-        {showDetail&& <Item_Detail description={description} cancelDisplay={()=>setShowDetail(false)}/>}
+        {showDetail&& <Item_Detail description={description} url={url} cancelDisplay={()=>setShowDetail(false)}/>}
         </>
     );
 }
