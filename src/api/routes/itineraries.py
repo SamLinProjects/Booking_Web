@@ -18,37 +18,48 @@ def create_itinerary():
         if field not in data:
             data[field] = ""
 
-    type = data['type']
-    name = data['name']
-    description = data['description']
-    image = data['image']
-    url = data['url']
-    start = data['start']
-    destination = data['destination']
-    departure_time = data['departure_time']
-    arrival_time = data['arrival_time']
-    price = data['price']
+    itinerary_data = {
+        'type': data['type'],
+        'name': data['name'],
+        'description': data['description'],
+        'image': data['image'],
+        'url': data['url'],
+        'start': data['start'],
+        'destination': data['destination'],
+        'departure_time': data['departure_time'],
+        'arrival_time': data['arrival_time'],
+        'price': data['price']
+    }
 
-    if Itinerary.query.filter_by(name=name).first():
-        return jsonify({'error': 'Itinerary already exists'}), 409
-    
-    new_itinerary = Itinerary(
-        type=type,
-        name=name,
-        description=description,
-        image=image,
-        url=url,
-        start=start,
-        destination=destination,
-        departure_time=departure_time,
-        arrival_time=arrival_time,
-        price=price
-    )
+    try:
+        itinerary = Itinerary(**itinerary_data)
+        db.session.add(itinerary)
+        db.session.commit()
 
-    db.session.add(new_itinerary)
-    db.session.commit()
+        return jsonify({
+            'message': 'Itinerary created successfully',
+            'id': itinerary.id,
+        }), 201
+    except Exception as e:
+        db.session.rollback()
+        
+        if 'unique constraint' in str(e).lower() or 'duplicate' in str(e).lower():
+            existing_itinerary = Itinerary.query.filter_by(
+                type=itinerary_data['type'],
+                name=itinerary_data['name'],
+                url=itinerary_data['url']
+            ).first()
 
-    return jsonify({'message': 'Itinerary created successfully'}), 201
+            if existing_itinerary:
+                return jsonify({
+                    'message': 'Itinerary already exists',
+                    'id': existing_itinerary.id
+                }), 200                
+
+        return jsonify({
+            'error': 'Failed to create itinerary',
+            'details': str(e)
+        }), 409
 
 @itinerary_bp.route('/itineraries/<int:itinerary_id>', methods=['GET'])
 def get_itinerary(itinerary_id):

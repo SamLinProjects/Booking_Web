@@ -23,6 +23,7 @@ export default function useBooking() {
             }
             console.log("Booking successful.");
             alert("Itinerary booked successfully!");
+            return await res.json();
         } catch (error) {
             console.error("Error during booking:", error);
             alert("An error occurred while booking the itinerary. Please try again.");
