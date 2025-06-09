@@ -57,12 +57,48 @@ export default function Page() {
         }
     }
 
+    const countries = [
+        { value: 'tw', label: '台灣' },
+        { value: 'jp', label: '日本' },
+        { value: 'ch', label: '中國大陸' },
+      ];
+      type CountryCode = typeof countries[number]["value"]; // "tw" | "jp" | "ch"
+
+      type CityOption = {
+        value: string;
+        label: string;
+      };
+      
+      // 讓 cities 的 key 只能是 CountryCode 中的值
+      const cities: Record<CountryCode, CityOption[]> = {
+        tw:[
+        { value: 'Taipei', label: '台北' },
+        { value: 'Taichung', label: '台中' },
+        { value: 'Kaoshiung', label: '高雄' },
+        { value: 'Tainan', label: '台南' },
+        { value: "Yilan County", label: '宜蘭'},
+        { value: "Taitung", label: '台東'}],
+        jp:[
+        { value: 'Tokyo', label: '東京' },
+        { value: 'Okinawa', label: '沖繩' },
+        { value: 'Hokkaido', label: '北海道' },
+        ],
+        ch:[
+        { value: 'Shanhai', label: '上海' },
+        { value: 'Beijing', label: '北京' },
+        { value: 'Hongkong', label: '香港' },
+        ],
+    }
+
+    const keywords = [{ value: 'tour', label: 'tour' },
+                    { value: 'tickets', label: 'tickets' },];
+
     return(
         <>
         <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <Input label="Keyword" type="text" value={keyword} onChange={(e: ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value)} placeholder="What are you looking for?" />
-            <Input label="Country" type="text" value={country} onChange={(e: ChangeEvent<HTMLInputElement>) => setCountry(e.target.value)} placeholder="Which country are you going to?" />
-            <Input label="City" type="text" value={city} onChange={(e: ChangeEvent<HTMLInputElement>) => setCity(e.target.value)} placeholder="Which city are you going to?" />
+            <Dropdown label="Keyword" value={keyword} onChange={(e:string) => setKeyword(e)} options={keywords} />
+            <Dropdown label="Country" value={country} onChange={(e:string) => setCountry(e)} options={countries} />
+            <Dropdown label="City" value={city} onChange={(e: string) => setCity(e)} options={cities[country]} />
             <div className="flex gap-4">
                 <Input label="Start Date" type="date" value={startDate.toISOString().split('T')[0]} defaultValue={startDate.toISOString().split('T')[0]} onChange={(e: ChangeEvent<HTMLInputElement>) => setStartDate(new Date(e.target.value))} />
                 <Input label="End Date" type="date" value={endDate.toISOString().split('T')[0]} defaultValue={endDate.toISOString().split('T')[0]} onChange={(e: ChangeEvent<HTMLInputElement>) => setEndDate(new Date(e.target.value))} />
