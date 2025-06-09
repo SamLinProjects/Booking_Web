@@ -2,6 +2,7 @@
 import React from "react";
 import { useState } from "react";
 import Items from "@/src/components/Items"
+import LoadingSpinner from "@/src/components/ui/Loading"
 
 export default function Page(){
 
@@ -50,6 +51,7 @@ return(
     { classes[activeTab].map((c) => (
       <Class name={c.id} description={c.description} key={c.id}/>
     ))}
+    <LoadingSpinner color="#9cba9c"/>
   </div>
   </div>
   </div>
