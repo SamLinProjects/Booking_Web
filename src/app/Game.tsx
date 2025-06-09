@@ -34,8 +34,8 @@ const SnakeGame: React.FC<SnakeGameProp> = ({
   const CELL_SIZE = 50;
   const BOARD_SIZEX = Math.floor(screenSize.width/CELL_SIZE);
   const BOARD_SIZEY = Math.floor(screenSize.height/CELL_SIZE);
-  const INITIAL_SNAKE = [{ x: 3, y: 0 },{ x: 2, y: 0 },{ x: 1, y: 0}];
-  const INITIAL_DIRECTION = { x: 1, y: 0 };
+  const INITIAL_SNAKE = [{ x: 3, y: 0 },{ x: 4, y: 0 },{ x: 5, y: 0 }];
+  const INITIAL_DIRECTION = { x: -1, y: 0 };
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gameState, setGameState] = useState<GameState>({
