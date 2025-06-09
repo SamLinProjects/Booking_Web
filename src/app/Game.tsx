@@ -120,6 +120,20 @@ const SnakeGame: React.FC<SnakeGameProp> = ({
     return () => clearInterval(gameInterval);
   }, [moveSnake]);
 
+  const growUp = useCallback(() => {
+    setGameState(prevState => {
+      if (prevState.snake.length === 0) return prevState;
+      const tail = { ...prevState.snake[prevState.snake.length - 1] };
+      const newSnake = [...prevState.snake, tail];
+      return { ...prevState, snake: newSnake };
+    });
+  }, []);
+
+  useEffect(() => {
+    const gameInterval = setInterval(growUp, 7500);
+    return () => clearInterval(gameInterval);
+  }, [growUp]);
+
   // Canvas drawing
   useEffect(() => {
     const canvas = canvasRef.current;
