@@ -28,7 +28,7 @@ def user_input():
     return startST, endST, date_value
 
 
-def data_Crawl(startST, endST, date_value):
+def data_Crawl(startST, endST, date_value, time_value="18:00"):
     from selenium.webdriver.chrome.options import Options
     from selenium.webdriver.chrome.service import Service
     from webdriver_manager.chrome import ChromeDriverManager
@@ -86,7 +86,6 @@ def data_Crawl(startST, endST, date_value):
     time_input = browser.find_element(By.CSS_SELECTOR, "input#outWardTime")
     time_input.click()
 
-    time_value = "18:00"  # 預設時間，可改成 input() 方式
     hh, mm = time_value.split(":")
     picker = WebDriverWait(browser, 5).until(
         EC.visibility_of_element_located((
@@ -156,7 +155,33 @@ def main():
         print("\n查詢結果：")
         print(df.to_string(index=False))
 
+class TaiwanHighSpeedRailCrawler():
+    def __init__(self):
+        pass
+
+    def search(self, start_time, start_place, end_place):
+        date_value = start_time.split(",")[0]
+        date_value = date_value.replace("-", "")
+        if re.match(r"^\d{8}$", date_value):
+            yyyy, mm, dd = date_value[:4], date_value[4:6], date_value[6:8]
+            if 1 <= int(mm) <= 12 and 1 <= int(dd) <= 31:
+                date_value = f"{yyyy}/{mm}/{dd}"
+        start_time = start_time.split(",")[1]
+        if ":" not in start_time:
+            start_time = f"{start_time[:2]}:{start_time[2:]}"
+        end_time = end_time.split(",")[1]
+        if ":" not in end_time:
+            end_time = f"{end_time[:2]}:{end_time[2:]}"
+        df = data_Crawl(start_place, end_place, date_value, start_time)
+        print(df.to_string(index=False))
+
+
 
 if __name__ == "__main__":
-    main()
+    # main()
+    crawler = TaiwanHighSpeedRailCrawler()
+    start_time = "2025-06-10,19:00"
+    start_place = "台北"
+    end_place = "左營"
+    
 
