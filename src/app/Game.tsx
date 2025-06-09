@@ -34,8 +34,8 @@ const SnakeGame: React.FC<SnakeGameProp> = ({
   const CELL_SIZE = 50;
   const BOARD_SIZEX = Math.floor(screenSize.width/CELL_SIZE);
   const BOARD_SIZEY = Math.floor(screenSize.height/CELL_SIZE);
-  const INITIAL_SNAKE = [{ x: 3, y: 0 },{ x: 4, y: 0 },{ x: 5, y: 0 }];
-  const INITIAL_DIRECTION = { x: -1, y: 0 };
+  const INITIAL_SNAKE = [{ x: 3, y: 0 },{ x: 2, y: 0 },{ x: 1, y: 0}];
+  const INITIAL_DIRECTION = { x: 1, y: 0 };
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gameState, setGameState] = useState<GameState>({
@@ -119,20 +119,6 @@ const SnakeGame: React.FC<SnakeGameProp> = ({
     const gameInterval = setInterval(moveSnake, 150);
     return () => clearInterval(gameInterval);
   }, [moveSnake]);
-
-  const growUp = useCallback(() => {
-    setGameState(prevState => {
-      if (prevState.snake.length === 0) return prevState;
-      const tail = { ...prevState.snake[prevState.snake.length - 1] };
-      const newSnake = [...prevState.snake, tail];
-      return { ...prevState, snake: newSnake };
-    });
-  }, []);
-
-  useEffect(() => {
-    const gameInterval = setInterval(growUp, 7500);
-    return () => clearInterval(gameInterval);
-  }, [growUp]);
 
   // Canvas drawing
   useEffect(() => {
