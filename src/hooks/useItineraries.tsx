@@ -165,16 +165,26 @@ export default function useItineraries() {
 
     const searchItineraries = async ({
         type, 
-        dateTime,
-        adult,
+        country,
         city,
-        budget
+        keyword, 
+        start_time, 
+        end_time,
+        start_place, 
+        end_place,
+        adult,
+        budget,
     }: {
         type: string;
-        dateTime: string;
-        adult: number;
-        city: string;
-        budget: number;
+        country?: string;
+        city?: string;
+        keyword?: string;
+        start_time?: string;
+        end_time?: string;
+        start_place?: string;
+        end_place?: string;
+        adult?: number;
+        budget?: number;
     }) => {
         try {
             const res = await fetch('/api/itineraries/search', {
@@ -185,9 +195,14 @@ export default function useItineraries() {
                 body: JSON.stringify({
                     type: type,
                     query: {
-                        dateTime: dateTime,
-                        adult: adult,
+                        country: country,
                         city: city,
+                        keyword: keyword,
+                        start_time: start_time,
+                        end_time: end_time,
+                        start_place: start_place,
+                        end_place: end_place,
+                        adult: adult,
                         budget: budget
                     }
                 }),
@@ -199,7 +214,28 @@ export default function useItineraries() {
             }
             const data = await res.json();
             const results = data.results;
-            console.log(results);
+            console.log("Search results:", results);
+            try {
+                results.forEach((item: any) => {
+                    postItinerary({
+                        type: type,
+                        name: item.title,
+                        description: item?.description,
+                        image: item?.image,
+                        url: item.link,
+                        start: item?.start_place,
+                        destination: item?.end_place,
+                        departure_time: item?.start_time,
+                        arrival_time: item?.end_time,
+                        price: item.price
+                    })
+                    
+                })
+            } catch (error) {
+                console.error("Error during posting search results:", error);
+                alert("An error occurred while processing search results. Please try again.");
+            }
+
             return data;
         } catch (error) {
             console.error("Error during searching itineraries:", error);

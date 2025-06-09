@@ -22,8 +22,8 @@ class Itinerary(db.Model):
     url = db.Column(db.String(200))
     start = db.Column(db.String(50))
     destination = db.Column(db.String(50))
-    departure_time = db.Column(db.DateTime)
-    arrival_time = db.Column(db.DateTime)
+    departure_time = db.Column(db.String)
+    arrival_time = db.Column(db.String)
     price = db.Column(db.Float)
 
 class TokenBlacklist(db.Model): 
