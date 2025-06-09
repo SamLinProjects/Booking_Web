@@ -20,7 +20,7 @@ export default function Header(){
     }
 
     return(
-        <header className="w-full flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#283928] px-10 py-3 fixed top-0 z-10 bg-[#283928]">
+        <header className="w-full flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#283928] px-10 py-3 fixed top-0 z-20 bg-[#283928]">
             <a href="/" className="flex items-center gap-4">
                 <h2 className="flex items-center gap-4 text-white text-lg font-bold leading-tight tracking-[-0.015em]">
                     Bookify

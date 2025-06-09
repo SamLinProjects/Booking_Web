@@ -2,6 +2,7 @@
 import Search from "./Search";
 import { useState } from "react";
 import useItineraries from "../hooks/useItineraries";
+import SnakeGame from "./Game";
 
 export default function Home() {
     const { searchItineraries } = useItineraries();
@@ -22,14 +23,21 @@ export default function Home() {
             end_place: end_place,
         });
         console.log("Search results:");
+        
     }
 
     return (
-        <main className="mt-16 relative flex size-full min-h-screen flex-col bg-[#111811] dark group/design-root overflow-x-hidden"
-            style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}>
-            <button onClick={() => testSearch()} className="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded">
-                Test Search
-            </button>
-        </main>
+
+    <main className="pt-16 relative flex size-full min-h-screen flex-col dark group/design-root overflow-x-hidden"
+        style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}>
+        <SnakeGame bgcolor="#111811"/>
+        <div 
+    className="absolute inset-0 bg-cover bg-center bg-no-repeat saturate-50 pointer-events-none"
+    style={{
+      backgroundImage: 'linear-gradient(rgba(30, 43, 30, 0.3), rgba(30, 43, 30, 0.4)), url("/images/homepage.png")',
+      zIndex: 10,
+      opacity: 0.35
+    }}/>
+    </main>
     );
 }

@@ -6,6 +6,7 @@ from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import pandas as pd
 
@@ -74,7 +75,10 @@ def data_Crawl(startST, endST, transfer, date_value, startOrEnd, timeRange, trai
                          ).click()
 
     browser.find_element(By.NAME, "query").click()
-    # sleep(2)
+    # Wait for the page to load after clicking query
+    wait.until(EC.presence_of_element_located(
+        (By.CSS_SELECTOR, "tbody tr.trip-column")))
+    # Record the result URL
     browser.encoding = "utf-8"
     html_info = browser.page_source
     browser.quit()
@@ -106,13 +110,73 @@ def parse_results(html_info):
 
     df = pd.DataFrame(dataList).transpose()
     df.columns = columnsName
-    
+
     return df
+
+
+class TaiwanRailwayCrawler():
+    def __init__(self):
+        pass
+
+    def search(self, start_time, end_time, start_place, end_place):
+        # start_time: yyyy-mm-dd,HH:MM
+        date_value = start_time.split(",")[0]
+        date_value = date_value.replace("-", "")
+        if re.match(r"^\d{8}$", date_value):
+            yyyy, mm, dd = date_value[:4], date_value[4:6], date_value[6:8]
+            if 1 <= int(mm) <= 12 and 1 <= int(dd) <= 31:
+                date_value = f"{yyyy}/{mm}/{dd}"
+        start_time = start_time.split(",")[1]
+        if ":" not in start_time:
+            start_time = f"{start_time[:2]}:{start_time[2:]}"
+        end_time = end_time.split(",")[1]
+        if ":" not in end_time:
+            end_time = f"{end_time[:2]}:{end_time[2:]}"
+        transfer = "1"
+        startOrEnd = "1"
+        timeRange = [start_time, end_time]
+        trainType = "1"
+
+        params = (start_place, end_place, transfer,
+                  date_value, startOrEnd, timeRange, trainType)
+        for _ in range(100):
+            html = data_Crawl(*params)
+            soup = BeautifulSoup(html, "html.parser")
+            results = []
+            # 如果找到 <tbody>，就可以 parse
+            if soup.find("tbody") is not None:
+                df = parse_results(html)
+                _type = "TWR"
+                for index, row in df.iterrows():
+                    # print(index, row.to_dict())
+                    link = "https://www.railway.gov.tw/tra-tip-web/tip/tip001/tip112/querybytrainno?rideDate={}&trainNo=".format(
+                        date_value)
+                    row_dict = row.to_dict()
+                    id = re.search(r'\d+', row_dict['車種車次(始發站→終點站)']).group()
+                    link += id
+                    start_date = row_dict['出發時間']
+                    end_date = row_dict['抵達時間']
+                    price = row_dict['全票']
+                    results.append({
+                        'type': _type,
+                        'link': link,
+                        'start_date': start_date,
+                        'end_date': end_date,
+                        'start_place': start_place,
+                        'end_place': end_place,
+                        'price': price
+                    })
+                return results
+            else:
+                sleep(0.1)
+                # print(id)
+            # else:
+            #     sleep(0.5)
 
 
 def main():
     params = user_input()
-    
+
     max_retries = 100  # 最大重試次數
     for attempt in range(1, max_retries+1):
         html = data_Crawl(*params)
@@ -128,8 +192,13 @@ def main():
         print("未找到任何班次。")
     else:
         print("\n查詢結果：")
-        print(df.to_string(index=False))
+        # print(df.to_string(index=False))
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    crawler = TaiwanRailwayCrawler()
+    results = crawler.search("臺北", "中壢", "1", "20250610", "1", [
+                             "00:00", "23:59"], "1")
+    for result in results:
+        print(result)
