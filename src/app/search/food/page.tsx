@@ -4,6 +4,7 @@ import useItineraries from "@/src/hooks/useItineraries";
 import Input from "@/src/components/ui/Input";
 import Loading from "@/src/components/ui/Loading";
 import Item from "@/src/components/ui/Items";
+import Dropdown from "@/src/components/ui/Dropdown";
 
 export default function Page() {
     const { searchItineraries } = useItineraries();
@@ -70,10 +71,36 @@ export default function Page() {
         }
     }
 
+    const Cities = [
+        { value: '基隆', label: '基隆' },
+        { value: '臺北', label: '臺北' },
+        { value: '新北', label: '新北' },
+        { value: '桃園', label: '桃園' },
+        { value: '新竹市', label: '新竹市' },
+        { value: '新竹縣', label: '新竹縣' },
+        { value: '苗栗', label: '苗栗' },
+        { value: '臺中', label: '臺中' },
+        { value: '彰化', label: '彰化' },
+        { value: '南投', label: '南投' },
+        { value: '雲林', label: '雲林' },
+        { value: '嘉義市', label: '嘉義市' },
+        { value: '嘉義縣', label: '嘉義縣' },
+        { value: '臺南', label: '臺南' },
+        { value: '高雄', label: '高雄' },
+        { value: '屏東', label: '屏東' },
+        { value: '宜蘭', label: '宜蘭' },
+        { value: '花蓮', label: '花蓮' },
+        { value: '臺東', label: '臺東' },
+        { value: '澎湖', label: '澎湖' },
+        { value: '金門', label: '金門' },
+        { value: '連江', label: '連江' }
+      ];
+      
+
     return(
         <>
         <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <Input label="City" type="text" value={city} onChange={(e: ChangeEvent<HTMLInputElement>) => setCity(e.target.value)} placeholder="Which city are you finding restaurants?" />
+            <Dropdown label="City" value={city} onChange={(e:string) => setCity(e)} options={Cities} />
             <Input label="Time" type="datetime-local" value={formatDateTimeLocal(startDate)} defaultValue={formatDateTimeLocal(startDate)} onChange={(e: ChangeEvent<HTMLInputElement>) => setStartDate(new Date(e.target.value))} />
             <div className="flex gap-4">
                 <Input label="Adults" type="number" value={adult} onChange={(e: ChangeEvent<HTMLInputElement>) => setAdult(parseInt(e.target.value))} />
