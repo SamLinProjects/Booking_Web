@@ -2,13 +2,13 @@ from .base import SeleniumCrawler
 from bs4 import BeautifulSoup
 
 class BookingCrawler(SeleniumCrawler):
-    def search(self, country, city, start_date, end_date, adults=1, children=0, rooms=1): 
+    def search(self, country, city, start_time, end_time, adults=1, children=0, rooms=1): 
         url = f"https://www.booking.com/searchresults.zh-tw.html"
         params = {
             'ss': f"{city}%2C+{country}",
             'efdco': '1',
-            'checkin': f'{start_date}',
-            'checkout': f'{end_date}',
+            'checkin': f'{start_time}',
+            'checkout': f'{end_time}',
             'group_adults': f'{adults}',
             'group_children': f'{children}',
             'no_rooms': f'{rooms}',

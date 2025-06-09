@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import Items from "@/src/components/Items"
+import Items from "@/src/components/ui/Items"
 import LoadingSpinner from "@/src/components/ui/Loading"
 
 export default function Page(){
