@@ -27,7 +27,10 @@ export default function Page() {
     };
 
     const handleSearch = async () => {
-
+        if (!trainType || !startPlace || !endPlace) {
+            alert("Please fill in all fields.");
+            return;
+        }
         if (startDate >= endDate) {
             alert("End date must be after start date.");
             return;
@@ -36,16 +39,18 @@ export default function Page() {
         const type = trainType;
         setIsLoading(true);
         try {
-            // const data = await searchItineraries({
-            //     type: type,
-            //     start_time: startDate.toISOString(),
-            //     end_time: endDate.toISOString(),
-            // });
-            // if (data) {
-            //     setSearchResults(data.results || []);
-            //     console.log("Search results:", data.results);
-            //     setIsLoading(false);
-            // }
+            const data = await searchItineraries({
+                type: type,
+                start_place: startPlace,
+                end_place: endPlace,
+                start_time: formatDateTimeLocal(startDate).replace('T', ','),
+                end_time: formatDateTimeLocal(endDate).replace('T', ',')
+            });
+            if (data) {
+                setSearchResults(data.results || []);
+                console.log("Search results:", data.results);
+                setIsLoading(false);
+            }
         } catch (error) {
             console.error("Error during search:", error);
             alert("An error occurred while searching for stays. Please try again.");
