@@ -61,7 +61,7 @@ export default function Items({
             </div>
             <div className="shrink-0">
                 <p className="text-white text-base font-normal leading-normal">
-                TWD ${price}
+                TWD ${price.replace('$', '')}
                 </p>
             </div>
         </button>

@@ -37,6 +37,9 @@ def data_Crawl(startST, endST, date_value, time_value="18:00"):
     from time import sleep
 
     opts = Options()
+
+    opts.add_argument("--headless")  # 無頭模式
+
     # 不用 headless，方便 debug
     opts.add_argument("--disable-gpu")
     opts.add_argument("--no-sandbox")
@@ -159,7 +162,7 @@ class TaiwanHighSpeedRailCrawler():
     def __init__(self):
         pass
 
-    def search(self, start_time, start_place, end_place):
+    def search(self, start_time, end_time, start_place, end_place):
         date_value = start_time.split(",")[0]
         date_value = date_value.replace("-", "")
         if re.match(r"^\d{8}$", date_value):

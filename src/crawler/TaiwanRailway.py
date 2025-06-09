@@ -153,15 +153,17 @@ class TaiwanRailwayCrawler():
                         date_value)
                     row_dict = row.to_dict()
                     id = re.search(r'\d+', row_dict['車種車次(始發站→終點站)']).group()
+                    description = row_dict['車種車次(始發站→終點站)'].replace(id, '').strip()
                     link += id
                     start_date = row_dict['出發時間']
                     end_date = row_dict['抵達時間']
                     price = row_dict['全票']
                     results.append({
                         'type': _type,
+                        'description': description,
                         'link': link,
-                        'start_date': start_date,
-                        'end_date': end_date,
+                        'start_time': start_date,
+                        'end_time': end_date,
                         'start_place': start_place,
                         'end_place': end_place,
                         'price': price
