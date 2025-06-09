@@ -2,11 +2,11 @@ from .base import SeleniumCrawler
 from bs4 import BeautifulSoup
 
 class InlineCrawler(SeleniumCrawler):
-    def search(self, start_time, adult, city, budget): 
+    def search(self, start_time, adults, city, budget): 
         url = f"https://www.opentable.com.tw/s"
         params = {
             'dateTime': f"{start_time}%3A00%3A00", 
-            'adult': adult,
+            'adult': adults,
             'city': city, 
             'shouldUseLatLongSearch': 'false',
             'sortBy': 'web_conversion', 
