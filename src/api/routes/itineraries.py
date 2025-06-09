@@ -102,13 +102,14 @@ def search_itineraries():
     print("Search endpoint hit!")
     data = request.get_json()
     query = data.get('query')
+    clean_query = {k: v for k, v in query.items() if v is not None and v != ''}
 
     type = data.get('type')
     print(f"Searching for itineraries of type: {type}")
-    print(f"Query: {query}")
+    print(f"Query: {clean_query}")
 
     crawler = crawler_map[type]()
-    results = crawler.search(**query)
+    results = crawler.search(**clean_query)
     print(f"Search results:", results)
 
     return jsonify({'message': 'Search completed successfully', 'results': results}), 200

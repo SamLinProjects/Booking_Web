@@ -33,9 +33,8 @@ to start backend, you need you set up a local postgreSQL database
     ```
 4. create table
     ```bash 
-    cd api
     pip install -r requirements.txt
-    python index.py
+    python3 -m src.api.index
     ```
     then you can go back to postgresql to check the tables
     ```sql
@@ -152,7 +151,7 @@ src/crawler/
 
 ### Start crawling
 
-Only crawler for kkday is done so far, you can crawl kkday by executing `/src/crawler/temp.py` now.
+you can crawl kkday by executing `/src/crawler/temp.py` now.
 ```py
 # src/crawler/temp.py
 from kkday import KKDayCrawler
@@ -172,6 +171,159 @@ if __name__ == "__main__":
     for result in results: 
         print(f"{result}\n")
 ```
+
+you can also use terminal command to crawl now.
+
+```bash
+curl -X POST "http://localhost:5000/api/itineraries/search" -H "Content-Type: application/json" -d '{
+  "type": "inline",
+  "query": {
+    "dateTime": "2025-07-01T19",
+    "adult": 2,
+    "city": "Taipei",
+    "budget": 2
+  }
+}'
+```
+
+in body, `type` means the website you want to crawl, `query` contains the parameters, such as tour type, city and country, budget, etc.
+
+now available website: <sup>1. </sup>kkday <sup>2. </sup>booking.com <sup>3. </sup>inline <sup>4. </sup>THSR <sup>5. </sup>TWR
+
+parameters:
+
+<div style="display: flex;">
+<div style="width: 33%; padding-right: 0.3%;">
+
+```
+kkday:
+1. country
+2. city
+3. keyword:
+  "attraction-tickets" or
+  "day-tours"
+4. start date
+5. end date
+```
+
+</div>
+<div style="width: 33%; padding-left: 0.25%; padding-right: 0.25%;">
+
+```
+booking.com:
+1. country
+2. city
+3. checkin date
+4. checkout date
+5. adults
+6. children
+7. rooms
+```
+
+</div>
+<div style="width: 33%; padding-left: 0.25%; padding-right: 0.25%;">
+
+```
+inline:
+1. time: ex. 2025-07-01T19
+2. city
+3. adult
+4. budget: 2 to 4
+```
+
+</div>
+</div>
+<div style="display: flex;">
+<div style="width: 49.5%; padding-left: 0.25%; padding-right: 0.25%;">
+
+```
+THSR:
+1. start
+2. destination
+3. date
+4. start time
+```
+
+</div>
+<div style="width: 49.5%; padding-left: 0.25%; padding-right: 0.25%;">
+
+```
+TWR:
+1. start
+2. destination
+3. date
+4. start time
+```
+
+</div>
+</div>
+
+output:
+
+<div style="display: flex;">
+<div style="width: 33%; padding-right: 0.3%;">
+
+```
+kkday:
+1. type: "kkday"
+2. title: string
+3. description: string
+4. image: url
+5. link: url
+6. date: string
+7. price: number
+```
+
+</div>
+<div style="width: 33%; padding-left: 0.25%; padding-right: 0.25%;">
+
+```
+booking.com:
+1. type: "booking.com"
+2. title: string
+3. description: string
+4. image: url
+5. link: url
+6. city: string
+7. start_date: string
+8. end_date: string
+9. price: number
+```
+
+</div>
+<div style="width: 33%; padding-left: 0.25%; padding-right: 0.25%;">
+
+```
+inline:
+1. type: "inline"
+2. title: string
+3. image: url
+4. link: url
+5. city: string
+6. time: string[]
+7. price: number
+```
+
+</div>
+</div>
+<div style="display: flex;">
+<div style="width: 49.5%; padding-left: 0.25%; padding-right: 0.25%;">
+
+```
+THSR:
+1. 
+```
+
+</div>
+<div style="width: 49.5%; padding-left: 0.25%; padding-right: 0.25%;">
+
+```
+TWR:
+1. 
+```
+
+</div>
+</div>
 
 ## Getting Started
 

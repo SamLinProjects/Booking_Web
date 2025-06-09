@@ -13,7 +13,13 @@ export default function Home() {
         const city = 'Taipei';
         const budget = 2;
 
-        const res = await searchItineraries({type, dateTime, adult, city, budget});
+        const res = await searchItineraries({
+            type: type,
+            city: city,
+            start_time: dateTime,
+            adult: adult,
+            budget: budget,
+        });
         console.log("Search results:");
     }
 
