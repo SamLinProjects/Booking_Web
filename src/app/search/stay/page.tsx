@@ -21,6 +21,7 @@ export default function Page() {
     const [ room, setRoom ] = useState<number>(1);
 
     const handleSearch = async () => {
+        console.log([country,city])
         if (!country || !city) {
             alert("Please enter both country and city.");
             return;
@@ -59,17 +60,41 @@ export default function Page() {
             setSearchResults([]);
         }
     }
-    const fruits = [
+    const countries = [
         { value: 'tw', label: '台灣' },
         { value: 'jp', label: '日本' },
         { value: 'ch', label: '中國大陸' },
       ];
+      type CountryCode = typeof countries[number]["value"]; // "tw" | "jp" | "ch"
+
+      type CityOption = {
+        value: string;
+        label: string;
+      };
+      
+      // 讓 cities 的 key 只能是 CountryCode 中的值
+      const cities: Record<CountryCode, CityOption[]> = {
+        tw:[
+        { value: 'taipei', label: '台北' },
+        { value: 'taichung', label: '台中' },
+        { value: 'kaoshiung', label: '高雄' },],
+        jp:[
+        { value: 'tokyo', label: '東京' },
+        { value: 'okinawa', label: '沖繩' },
+        { value: 'hokkaido', label: '北海道' },
+        ],
+        ch:[
+        { value: 'shanhai', label: '上海' },
+        { value: 'beijing', label: '北京' },
+        { value: 'hongkong', label: '香港' },
+        ],
+    }
 
     return(
         <>
         <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-            <Dropdown label="Country" value={country} onChange={(e:string) => setCountry(e)} placeholder="Which country are you going to?" options={fruits}/>
-            <Input label="City" type="text" value={city} onChange={(e: ChangeEvent<HTMLInputElement>) => setCity(e.target.value)} placeholder="Which city are you going to?" />
+            <Dropdown label="Country" value={country} onChange={(e:string) => setCountry(e)} placeholder="Which country are you going to?" options={countries}/>
+            <Dropdown label="City" value={city} onChange={(e: string) => setCity(e)} placeholder="Which city are you going to?" options={cities[country]}/>
             <div className="flex gap-4">
                 <Input label="Start Date" type="date" value={startDate.toISOString().split('T')[0]} defaultValue={startDate.toISOString().split('T')[0]} onChange={(e: ChangeEvent<HTMLInputElement>) => setStartDate(new Date(e.target.value))} />
                 <Input label="End Date" type="date" value={endDate.toISOString().split('T')[0]} defaultValue={endDate.toISOString().split('T')[0]} onChange={(e: ChangeEvent<HTMLInputElement>) => setEndDate(new Date(e.target.value))} />
