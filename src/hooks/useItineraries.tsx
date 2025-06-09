@@ -49,12 +49,12 @@ export default function useItineraries() {
                 alert("Failed to post itinerary: " + errorData.message);
                 throw new Error(errorData.message);
             }
-            console.log("Itinerary posted.");
-            alert("Itinerary posted successfully!");
+            // console.log("Itinerary posted.");
+            // alert("Itinerary posted successfully!");
             router.refresh();
         } catch (error) {
             console.error("Error during posting itinerary:", error);
-            alert("An error occurred while posting the itinerary. Please try again.");
+            // alert("An error occurred while posting the itinerary. Please try again.");
         }
     }
 
@@ -95,11 +95,11 @@ export default function useItineraries() {
                 throw new Error(errorData.message);
             }
             console.log("Itinerary deleted.");
-            alert("Itinerary deleted successfully!");
+            // alert("Itinerary deleted successfully!");
             router.refresh();
         } catch (error) {
             console.error("Error during deleting itinerary:", error);
-            alert("An error occurred while deleting the itinerary. Please try again.");
+            // alert("An error occurred while deleting the itinerary. Please try again.");
         }
     }
 
@@ -215,26 +215,26 @@ export default function useItineraries() {
             const data = await res.json();
             const results = data.results;
             console.log("Search results:", results);
-            try {
-                results.forEach((item: any) => {
-                    postItinerary({
-                        type: type,
-                        name: item.title,
-                        description: item?.description,
-                        image: item?.image,
-                        url: item.link,
-                        start: item?.start_place,
-                        destination: item?.end_place,
-                        departure_time: item?.start_time,
-                        arrival_time: item?.end_time,
-                        price: item.price
-                    })
+            // try {
+            //     results.forEach((item: any) => {
+            //         postItinerary({
+            //             type: type,
+            //             name: item.title,
+            //             description: item?.description,
+            //             image: item?.image,
+            //             url: item.link,
+            //             start: item?.start_place,
+            //             destination: item?.end_place,
+            //             departure_time: item?.start_time,
+            //             arrival_time: item?.end_time,
+            //             price: item.price
+            //         })
                     
-                })
-            } catch (error) {
-                console.error("Error during posting search results:", error);
-                alert("An error occurred while processing search results. Please try again.");
-            }
+            //     })
+            // } catch (error) {
+            //     console.error("Error during posting search results:", error);
+            //     alert("An error occurred while processing search results. Please try again.");
+            // }
 
             return data;
         } catch (error) {
