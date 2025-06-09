@@ -1,5 +1,5 @@
 from datetime import datetime
-from db import db
+from ..db import db
 
 user_itinerary = db.Table('user_itinerary',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),

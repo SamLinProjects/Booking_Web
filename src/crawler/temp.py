@@ -1,17 +1,14 @@
-from booking import BookingCrawler
+from . import crawler_map as crawlers
 
 if __name__ == "__main__": 
-    contry  = "tw"
-    city = "taipei"
-    id = "2637882"  # Example destination ID for Tokyo
-    checkin = "2025-07-01"
-    checkout = "2025-07-02"
-    adults = 2
-    children = 0
-    rooms = 1
+    dateTime = "2025-07-01T19"
+    adult = 2
+    city = "台北"
+    budget = 2
 
-    crawler = BookingCrawler()
-    results = crawler.search(contry, city, id, checkin, checkout, adults, children, rooms)
+    crawler = crawlers['inline']()
+    print(crawler)
+    results = crawler.search(dateTime, adult, city, budget)
 
     print(f"Found {len(results)} results:\n")
     if not results:

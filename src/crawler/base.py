@@ -1,15 +1,25 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+import os
+import shutil
 import time
 import random
 
 class SeleniumCrawler:
-    def __init__(self, headless=True):
+    def __init__(self, headless=True):        
         options = Options()
+        options.binary_location = '/usr/bin/google-chrome'
 
         if headless:
             options.add_argument("--headless")
+        
+        options.add_argument("--incognito")
+        options.add_argument("--no-first-run")
+        options.add_argument("--no-default-browser-check")
+        options.add_argument("--disable-default-apps")
         
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
@@ -27,9 +37,25 @@ class SeleniumCrawler:
         options.add_argument('--no-default-browser-check')
         options.add_argument('--no-first-run')
         
+        options.add_argument('--disable-gpu')
+        options.add_argument('--disable-software-rasterizer')
+        options.add_argument('--disable-background-networking')
+        options.add_argument('--disable-background-timer-throttling')
+        options.add_argument('--disable-client-side-phishing-detection')
+        options.add_argument('--disable-crash-reporter')
+        options.add_argument('--disable-default-apps')
+        options.add_argument('--disable-hang-monitor')
+        options.add_argument('--disable-prompt-on-repost')
+        options.add_argument('--disable-sync')
+        options.add_argument('--metrics-recording-only')
+        options.add_argument('--no-crash-upload')
+        options.add_argument('--safebrowsing-disable-auto-update')
+        options.add_argument('--remote-debugging-port=0')
+        
         options.add_argument('--window-size=1920,1080')
 
-        self.driver = webdriver.Chrome(options=options)
+        service = Service(ChromeDriverManager().install())
+        self.driver = webdriver.Chrome(service=service, options=options)
 
         self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
         self.driver.execute_script("Object.defineProperty(navigator, 'languages', {get: () => ['en-US', 'en']})")
@@ -68,3 +94,16 @@ class SeleniumCrawler:
 
     def close(self):
         self.driver.quit()
+        self.cleanup()
+
+    def cleanup(self):
+        """Clean up temporary directory"""
+        if hasattr(self, 'temp_dir') and os.path.exists(self.temp_dir):
+            try:
+                shutil.rmtree(self.temp_dir, ignore_errors=True)
+            except:
+                pass
+
+    def __del__(self):
+        """Destructor to ensure cleanup"""
+        self.cleanup()
