@@ -1,4 +1,4 @@
-import Items from "../components/Items";
+import Items from "../components/ui/Items";
 import { useEffect, useState, useMemo } from "react";
 import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";

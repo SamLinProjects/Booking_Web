@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function SearchLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<string>("");
-    const [searchResults, setSearchResults] = useState<any>(null);
+    const [searchResults, setSearchResults] = useState<any[]>([]);
 
     const handleOnClickTab = (e: string) => {
         setActiveTab(e);
@@ -60,7 +60,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </div>
             </div>
             {children}
-            
         </div>
         </div>
         </div>
