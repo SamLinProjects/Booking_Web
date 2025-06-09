@@ -38,3 +38,5 @@ __pycache__
 
 # env
 .env
+
+.src/crawler/base.py
