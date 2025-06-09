@@ -96,56 +96,45 @@ function Form({
   subject="",
   formdata=[],
 }:FormProp) {
+    const initFormData = useMemo<Record<string, string>>(() => {
+        return formdata.reduce((acc, item) => {
+        acc[item.id] = "";
+        return acc;
+        }, {}as Record<string, string>);
+    }, [formdata]);
+    
+    const [formData, setFormData] = useState(initFormData);
 
+    useEffect(() => {
+        setFormData(initFormData);
+    }, [initFormData]);
 
-/*將每個需要的資料寫成一個元素{ id: " ", label: " ", placeholder: " " };
-    id 代表這個元素的名字，給我們自己看的 ;
-    label 是顯示出來的名字，給網頁的使用者看的 ;
-    placeholder 是表單裡input 顯示的提示詞，相對不太重要 ;
-  然後將這些元素包成一個list，如：[{lst_element}, {2nd element}, ...]，就是formdata的參數。
-  subject 是給我們自己看的東西，就是表單的名字。
+    const handleChange = (value:string,name:string) => {
+        setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+        }));
+    };
 
-  表單送出：subject ＋ 表單裡的文字。
-*/
+    const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        
+        console.log("送出資料：", subject, formData);
+    };
 
-  const initFormData = useMemo<Record<string, string>>(() => {
-    return formdata.reduce((acc, item) => {
-      acc[item.id] = "";
-      return acc;
-    }, {}as Record<string, string>);
-  }, [formdata]);
-  
-  const [formData, setFormData] = useState(initFormData);
+    return (
+        <form onSubmit={handleSubmit} className="p-4 space-y-0">
+        {formdata.map((tab) => (
+        <Input
+        key={tab.id}
+        label={tab.label}
+        value={formData[tab.id]||""}
+        onChange={(e:React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value,tab.id)}
+        placeholder={tab.placeholder}
+        />
+                ))}
 
-  useEffect(() => {
-    setFormData(initFormData);
-  }, [initFormData]);
-
-  const handleChange = (value:string,name:string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("送出資料：", subject, formData);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="p-4 space-y-0">
-      {formdata.map((tab) => (
-      <Input
-      key={tab.id}
-      label={tab.label}
-      value={formData[tab.id]||""}
-      onChange={(e:React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value,tab.id)}
-      placeholder={tab.placeholder}
-    />
-            ))}
-
-      <Button type="submit" text="search"/>
-    </form>
-  );
+        <Button type="submit" text="search"/>
+        </form>
+    );
 }
