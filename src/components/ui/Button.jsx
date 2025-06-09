@@ -3,7 +3,7 @@ import { useState } from "react";
 export default function Button({
     type="search",
     text="",
-    onClick=()=>{},
+    onClick,
 }){
 
 
@@ -28,7 +28,7 @@ export default function Button({
     return(
       <button
         type={type}
-        className="flex items-center justify-center gap-2 px-4 py-2 rounded bg-[#1ea61e] text-white font-bold hover:bg-[#26d426] transition-all"
+        className="flex items-center justify-center gap-2 px-4 py-2 rounded bg-[#1ea61e] text-white font-bold hover:bg-[#26d426] transition-all max-w-[200px]"
         onClick={Clicking}
       >
         {clicked ?<div
@@ -44,7 +44,7 @@ export default function Button({
               </svg>
               </div>
                  :<div
-                className={`flex items-center justify-center gap-2 transition-opacity duration-350 w-[40px] h-[24px]
+                className={`flex items-center gap-2 transition-opacity duration-350 min-w-[40px] max-w-[200px] h-[24px]
                 ${fade ? "opacity-0" : "opacity-100"}`}>
                 {text}
               </div>
