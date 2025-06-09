@@ -11,7 +11,7 @@ export default function Button({
   const [fade, setFade] = useState(false);
   const Clicking=()=>{
       console.log("clicked");
-      onClick;
+      onClick();
       setFade(true)
       setTimeout(() => {
           setClicked(true);
