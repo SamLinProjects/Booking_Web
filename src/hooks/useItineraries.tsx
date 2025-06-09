@@ -163,10 +163,55 @@ export default function useItineraries() {
         }
     }
 
+    const searchItineraries = async ({
+        type, 
+        dateTime,
+        adult,
+        city,
+        budget
+    }: {
+        type: string;
+        dateTime: string;
+        adult: number;
+        city: string;
+        budget: number;
+    }) => {
+        try {
+            const res = await fetch('/api/itineraries/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type: type,
+                    query: {
+                        dateTime: dateTime,
+                        adult: adult,
+                        city: city,
+                        budget: budget
+                    }
+                }),
+            });
+            if (!res.ok) {
+                const errorData = await res.json();
+                alert("Failed to search itineraries: " + errorData.message);
+                throw new Error(errorData.message);
+            }
+            const data = await res.json();
+            const results = data.results;
+            console.log(results);
+            return data;
+        } catch (error) {
+            console.error("Error during searching itineraries:", error);
+            alert("An error occurred while searching itineraries. Please try again.");
+        }
+    }
+
     return {
         postItinerary,
         getItineraries,
         deleteItinerary,
-        updateItinerary
+        updateItinerary, 
+        searchItineraries
     }
 }

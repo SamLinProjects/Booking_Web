@@ -1,1 +1,14 @@
 Flask==3.0.3
+beautifulsoup4
+requests
+selenium
+webdriver-manager
+pandas
+flask
+flask_jwt_extended
+flask-cors
+flask_sqlalchemy
+flask-bcrypt
+psycopg2-binary
+python-dotenv
+passlib

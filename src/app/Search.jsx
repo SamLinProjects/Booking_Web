@@ -42,26 +42,27 @@ export default function Search(){
         <div className="layout-container flex h-full grow flex-col pt-16">
         <div className="px-40 flex flex-1 justify-center py-5">
         <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-          <h1 className="text-white tracking-light text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">
-            Where to?
-          </h1>
-          <div className="pb-3">
-          <div className="flex border-b border-[#3b543b] px-4 gap-8">
-            {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center justify-center pb-[13px] pt-4 transition duration-200
-                ${activeTab === tab.id
-                  ? "border-b-[3px] border-b-white text-white font-bold"
-                  : "border-b-[3px] border-b-transparent hover:border-b-white text-[#9cba9c] hover:text-white"
-              }`}>
-              <p className="text-sm tracking-[0.015em] font-bold leading-normal">{tab.label}</p>
-            </button>))}
-          </div>
-          </div>
-          {componentsMap[activeTab] || <Search_Stay />}
-          <Items type="activity" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
+            <h1 className="text-white tracking-light text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">
+                Where to?
+            </h1>
+            <div className="pb-3">
+            <div className="flex border-b border-[#3b543b] px-4 gap-8">
+                {tabs.map((tab) => (
+                    <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`flex flex-col items-center justify-center pb-[13px] pt-4 transition duration-200
+                            ${activeTab === tab.id
+                            ? "border-b-[3px] border-b-white text-white font-bold"
+                            : "border-b-[3px] border-b-transparent hover:border-b-white text-[#9cba9c] hover:text-white"
+                    }`}>
+                        <p className="text-sm tracking-[0.015em] font-bold leading-normal">{tab.label}</p>
+                    </button>
+                ))}
+            </div>
+            </div>
+            {componentsMap[activeTab]}
+            <Items type="activity" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
         </div>
         </div>
         </div>
