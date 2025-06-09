@@ -43,26 +43,26 @@ export default function Page() {
         <div className="layout-container flex h-full grow flex-col pt-16">
         <div className="px-40 flex flex-1 justify-center py-5">
         <div className="layout-content-container flex flex-col max-w-[960px] flex-1">
-          <h1 className="text-white tracking-light text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">
-            Where to?
-          </h1>
-          <div className="pb-3">
-          <div className="flex border-b border-[#3b543b] px-4 gap-8">
-            {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex flex-col items-center justify-center pb-[13px] pt-4 transition duration-200
-                ${activeTab === tab.id
-                  ? "border-b-[3px] border-b-white text-white font-bold"
-                  : "border-b-[3px] border-b-transparent hover:border-b-white text-[#9cba9c] hover:text-white"
-              }`}>
-              <p className="text-sm tracking-[0.015em] font-bold leading-normal">{tab.label}</p>
-            </button>))}
-          </div>
-          </div>
-          {componentsMap[activeTab] || <Form subject="Stay" formdata={formdata_Stay}/>}
-          <Items type="activity" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
+            <h1 className="text-white tracking-light text-[32px] font-bold leading-tight px-4 text-center pb-3 pt-6">
+                Where to?
+            </h1>
+            <div className="pb-3">
+            <div className="flex border-b border-[#3b543b] px-4 gap-8">
+                {tabs.map((tab) => (
+                <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex flex-col items-center justify-center pb-[13px] pt-4 transition duration-200
+                    ${activeTab === tab.id
+                    ? "border-b-[3px] border-b-white text-white font-bold"
+                    : "border-b-[3px] border-b-transparent hover:border-b-white text-[#9cba9c] hover:text-white"
+                }`}>
+                <p className="text-sm tracking-[0.015em] font-bold leading-normal">{tab.label}</p>
+                </button>))}
+            </div>
+            </div>
+            {componentsMap[activeTab]}
+            <Items type="activity" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
         </div>
         </div>
         </div>
@@ -82,56 +82,45 @@ function Form({
   subject="",
   formdata=[],
 }:FormProp) {
+    const initFormData = useMemo<Record<string, string>>(() => {
+        return formdata.reduce((acc, item) => {
+        acc[item.id] = "";
+        return acc;
+        }, {}as Record<string, string>);
+    }, [formdata]);
+    
+    const [formData, setFormData] = useState(initFormData);
 
+    useEffect(() => {
+        setFormData(initFormData);
+    }, [initFormData]);
 
-/*將每個需要的資料寫成一個元素{ id: " ", label: " ", placeholder: " " };
-    id 代表這個元素的名字，給我們自己看的 ;
-    label 是顯示出來的名字，給網頁的使用者看的 ;
-    placeholder 是表單裡input 顯示的提示詞，相對不太重要 ;
-  然後將這些元素包成一個list，如：[{lst_element}, {2nd element}, ...]，就是formdata的參數。
-  subject 是給我們自己看的東西，就是表單的名字。
+    const handleChange = (value:string,name:string) => {
+        setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+        }));
+    };
 
-  表單送出：subject ＋ 表單裡的文字。
-*/
+    const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        
+        console.log("送出資料：", subject, formData);
+    };
 
-  const initFormData = useMemo<Record<string, string>>(() => {
-    return formdata.reduce((acc, item) => {
-      acc[item.id] = "";
-      return acc;
-    }, {}as Record<string, string>);
-  }, [formdata]);
-  
-  const [formData, setFormData] = useState(initFormData);
+    return (
+        <form onSubmit={handleSubmit} className="p-4 space-y-0">
+        {formdata.map((tab) => (
+        <Input
+        key={tab.id}
+        label={tab.label}
+        value={formData[tab.id]||""}
+        onChange={(e:React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value,tab.id)}
+        placeholder={tab.placeholder}
+        />
+                ))}
 
-  useEffect(() => {
-    setFormData(initFormData);
-  }, [initFormData]);
-
-  const handleChange = (value:string,name:string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("送出資料：", subject, formData);
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="p-4 space-y-0">
-      {formdata.map((tab) => (
-      <Input
-      key={tab.id}
-      label={tab.label}
-      value={formData[tab.id]||""}
-      onChange={(e:React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value,tab.id)}
-      placeholder={tab.placeholder}
-    />
-            ))}
-
-      <Button type="submit" text="search"/>
-    </form>
-  );
+        <Button type="submit" text="search"/>
+        </form>
+    );
 }
