@@ -31,7 +31,7 @@ export default function Dropdown({
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
   
-    const handleSelect = (option) => {
+    const handleSelect = async (option) => {
       onChange(option.value);
       setIsOpen(false);
       setSearchTerm(option.label);
