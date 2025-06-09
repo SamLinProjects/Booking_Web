@@ -24,7 +24,7 @@ export default function LoadingSpinner({
     const textSize = textSizeClasses[size];
   
     return (
-      <div className={`flex flex-col items-center justify-center space-y-3 ${className}`}>
+    <div className={`flex flex-col items-center justify-center space-y-3 ${className}`}>
       <div className={`${spinnerSize} relative`}>
         <div 
         className={`${spinnerSize} rounded-full border-2 border-t-transparent animate-spin`}
@@ -38,6 +38,6 @@ export default function LoadingSpinner({
             className={`${textSize} font-medium animate-pulse`}
             style={{ color }}>
           {text}</div>)}
-      </div>
+    </div>
     );
   };
