@@ -6,6 +6,7 @@ from .kkday import KKDayCrawler
 from .booking import BookingCrawler
 from .inline import InlineCrawler
 from .TaiwanRailway import TaiwanRailwayCrawler
+
 crawler_map = {
     'kkday': KKDayCrawler,
     'booking': BookingCrawler,

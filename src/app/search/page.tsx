@@ -71,6 +71,7 @@ export default function Page() {
             </div>
             {componentsMap[activeTab]}
             <Items type="activity" start_time="8:00 AM" duration="1 hr" name="Yoga Class"/>
+
         </div>
         </div>
         </div>
