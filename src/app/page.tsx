@@ -36,6 +36,7 @@ export default function Home() {
       zIndex: 10,
       opacity: 0.35
     }}/>
+
     </main>
     );
 }
