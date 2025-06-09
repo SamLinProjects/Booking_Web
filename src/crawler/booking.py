@@ -29,7 +29,11 @@ class BookingCrawler(SeleniumCrawler):
 
         for item in items: 
             title = item.select_one('[data-testid="title"]').get_text(strip=True)
-            description = item.select_one('[role="link"]').get_text(strip=True)
+            description_elem = item.select_one('[role="link"]')
+            if description_elem:
+                description = description_elem.get_text(strip=True)
+            else:
+                description = ''
             image = item.select_one('[data-testid="image"]')['src']
             link = item.select_one('a')['href']
             price_elem = item.select_one('[data-testid="price-and-discounted-price"]')
@@ -38,16 +42,17 @@ class BookingCrawler(SeleniumCrawler):
             else:
                 price = int(''.join(filter(str.isdigit, price_elem.get_text(strip=True).replace('TWD', ''))))
 
-            results.append({
-                'type': 'booking.com',
-                'title': title,
-                'description': description,
-                'image': image,
-                'link': link, 
-                'start_place': place,
-                'start_time': start_date,
-                'end_time': end_date,
-                'price': price
-            })
+            if price != 0:
+                results.append({
+                    'type': 'booking.com',
+                    'title': title,
+                    'description': description,
+                    'image': image,
+                    'link': link, 
+                    'start_place': place,
+                    'start_time': start_date,
+                    'end_time': end_date,
+                    'price': price
+                })
 
         return results
