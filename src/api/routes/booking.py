@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
-from models.models import Itinerary, User
-from db import db
+from ..models.models import Itinerary, User
+from ..db import db
 
 user_itinerary_bp = Blueprint('user_itineraries', __name__)
 

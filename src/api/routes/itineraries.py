@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
-from models.models import Itinerary
-from db import db
+from ...crawler import crawler_map
+from ..models.models import Itinerary
+from ..db import db
 
 itinerary_bp = Blueprint('itineraries', __name__)
 
@@ -95,3 +96,19 @@ def update_itinerary(itinerary_id):
 
     db.session.commit()
     return jsonify({'message': 'Itinerary updated successfully'}), 200
+
+@itinerary_bp.route('/itineraries/search', methods=['POST'])
+def search_itineraries():
+    print("Search endpoint hit!")
+    data = request.get_json()
+    query = data.get('query')
+
+    type = data.get('type')
+    print(f"Searching for itineraries of type: {type}")
+    print(f"Query: {query}")
+
+    crawler = crawler_map[type]()
+    results = crawler.search(**query)
+    print(f"Search results:", results)
+
+    return jsonify({'message': 'Search completed successfully', 'results': results}), 200

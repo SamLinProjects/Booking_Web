@@ -3,9 +3,9 @@ from flask_jwt_extended import (
     create_access_token, create_refresh_token,
     jwt_required, get_jwt_identity, get_jwt, decode_token
 )
-from models.models import User, TokenBlacklist, RefreshToken
-from extensions import jwt, bcrypt
-from db import db
+from ..models.models import User, TokenBlacklist, RefreshToken
+from ..extensions import jwt, bcrypt
+from ..db import db
 
 auth_bp = Blueprint('auth', __name__)
 

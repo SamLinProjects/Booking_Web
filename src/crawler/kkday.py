@@ -1,4 +1,4 @@
-from base import SeleniumCrawler
+from .base import SeleniumCrawler
 from bs4 import BeautifulSoup
 
 class KKDayCrawler(SeleniumCrawler):
