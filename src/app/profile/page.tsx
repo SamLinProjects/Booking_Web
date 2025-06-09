@@ -3,12 +3,10 @@ import React from "react";
 import { useEffect, useState, useMemo, useRef } from "react";
 
 export default function Page(){
-    type TabKey = 'profile' | 'user_account' | 'other_account';
+    type TabKey = 'profile';
     const [activeTab, setActiveTab] = useState<TabKey>("profile");
     const tabs: { id: TabKey; label: string }[] = [
       { id: "profile", label: "Personal Profile" },
-      { id: "user_account", label: "My Account" },
-      { id: "other_account", label: "Connected Accounts" },
     ];
     const componentsMap = {
       profile: <PForm subject="profile" formdata={[
@@ -17,13 +15,6 @@ export default function Page(){
         { id: "Phone number", type:"tel"},
         { id: "Email address", type:"email"},
         { id: "Gender", label: "Physical gender"}
-      ]}/>,
-      user_account: <PForm subject="user_account" formdata={[        
-        { id: "User Name"},
-        { id: "Password", type:"password"},
-      ]}/>,
-      other_account: <PForm subject="other_account" formdata={[
-
       ]}/>,
     };
 
