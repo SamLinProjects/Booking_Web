@@ -1,5 +1,6 @@
 "use client";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import useItineraries from "@/src/hooks/useItineraries";
 import Input from "@/src/components/ui/Input";
 import Loading from "@/src/components/ui/Loading";
@@ -7,6 +8,7 @@ import Item from "@/src/components/ui/Items";
 import Dropdown from "@/src/components/ui/Dropdown";
 
 export default function Page() {
+    const searchParams = useSearchParams();
     const { searchItineraries } = useItineraries();
     const [ searchResults, setSearchResults ] = useState<any[]>([]);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
@@ -17,6 +19,66 @@ export default function Page() {
     const [ startDate, setStartDate ] = useState<Date>(new Date());
     const [ endDate, setEndDate ] = useState<Date>(new Date());
 
+    // Load parameters from URL on component mount
+    useEffect(() => {
+        const fetchParams = async () => {
+            if (searchParams) {
+                const urlTrainType = searchParams.get('type');
+                const urlStartPlace = searchParams.get('start_place');
+                const urlEndPlace = searchParams.get('end_place');
+                const urlStartDate = searchParams.get('start_time');
+                const urlEndDate = searchParams.get('end_time');
+
+                console.log("URL parameters:", {
+                    trainType: urlTrainType,
+                    startPlace: urlStartPlace,
+                    endPlace: urlEndPlace,
+                    startDate: urlStartDate,
+                    endDate: urlEndDate
+                });
+    
+                if (urlTrainType) await setTrainType(urlTrainType);
+                if (urlStartPlace) await setStartPlace(urlStartPlace);
+                if (urlEndPlace) await setEndPlace(urlEndPlace);
+                if (urlStartDate) await setStartDate(new Date(urlStartDate));
+                if (urlEndDate) await setEndDate(new Date(urlEndDate));
+    
+                // Auto-search if all required parameters are present
+                if (urlTrainType && urlStartPlace && urlEndPlace) {
+                    handleAutoSearch(urlTrainType, urlStartPlace, urlEndPlace, urlStartDate, urlEndDate);
+                }
+            }  
+        }
+
+        fetchParams();
+    }, [searchParams]);
+
+    const handleAutoSearch = async (trainType: string, startPlace: string, endPlace: string, startDate?: string | null, endDate?: string | null) => {
+        setIsLoading(true);
+        try {
+            const searchStartDate = startDate ? new Date(startDate) : new Date();
+            const searchEndDate = endDate ? new Date(endDate) : new Date();
+            
+            const data = await searchItineraries({
+                type: trainType,
+                start_place: startPlace,
+                end_place: endPlace,
+                start_time: formatDateTimeLocal(searchStartDate).replace('T', ','),
+                end_time: formatDateTimeLocal(searchEndDate).replace('T', ',')
+            });
+            console.log(data);
+            if (data) {
+                setSearchResults(data.results || []);
+                console.log("Auto search results:", data.results);
+            }
+        } catch (error) {
+            console.error("Auto search error:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    
     const formatDateTimeLocal = (date: Date) => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -121,7 +183,7 @@ export default function Page() {
                 <Input label="Arrival Time" type="datetime-local" value={formatDateTimeLocal(endDate)} defaultValue={formatDateTimeLocal(endDate)} onChange={(e: ChangeEvent<HTMLInputElement>) => setEndDate(new Date(e.target.value))} />
             </div>
             <button className="mt-4 w-40 bg-green-900 text-white px-4 py-2 rounded" onClick={() => handleSearch()}>
-                Search Stays
+                Search Trains
             </button>
         </div>
         {isLoading && <Loading size="xl"/>}
