@@ -50,6 +50,7 @@ def data_Crawl(startST, endST, date_value, time_value="18:00"):
     browser.maximize_window()
     # 直接打查詢頁
     browser.get("https://www.thsrc.com.tw/")
+    print("正在爬取資料...")
     sleep(1)
 
     # 點「不同意」彈窗
@@ -137,12 +138,24 @@ def data_Crawl(startST, endST, date_value, time_value="18:00"):
     tbody = WebDriverWait(table, 5).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "div.tr-tbody"))
     )
+    df = pd.DataFrame(columns=headers)
     rows = tbody.find_elements(By.CSS_SELECTOR, "a.tr-row")
+
+
+    columns = ["出發時間", "行車時間", "抵達時間", "車次", "自由座車廂", "早鳥", "備註"]
     for row in rows:
-        # 如果每個 <a> 裡面是用多個 <div> 分欄，就這樣拿
-        cells = row.find_elements(By.CSS_SELECTOR, "div")
-        values = [c.text.strip() for c in cells]
-        print(values)
+        cells = [c.text.strip()
+                 for c in row.find_elements(By.CSS_SELECTOR, "div")]
+        # some rows may have extra empty DIVs at the end — slice to match your columns
+        cells = cells[:len(columns)]
+        df_length = len(df)
+        df.loc[df_length] = cells
+
+    # drop any columns that ended up completely empty
+    df.dropna(axis=1, how="all", inplace=True)
+
+    return df
+
 
 
 def main():
@@ -176,13 +189,37 @@ class TaiwanHighSpeedRailCrawler():
         if ":" not in end_time:
             end_time = f"{end_time[:2]}:{end_time[2:]}"
         df = data_Crawl(start_place, end_place, date_value, start_time)
-        print(df.to_string(index=False))
+        results = []
+        _type = "THSR"
+
+        for _, row in df.iterrows():
+            train_no = re.search(r'\d+', row["車次"]).group()
+            link = (
+                "https://www.railway.gov.tw/tra-tip-web/tip/tip001/tip112/"
+                f"querybytrainno?rideDate={date_value}&trainNo={train_no}"
+            )
+            results.append({
+                "type": _type,
+                "title": "高鐵",
+                "description": row["車次"].replace(train_no, "").strip(),
+                "link": link,
+                "start_time": row["出發時間"],
+                "end_time": row["抵達時間"],
+                "start_place": start_place,
+                "end_place": end_place,
+            })
+
+        return results
+        # print(df.to_string(index=False))
 
 
 
 if __name__ == "__main__":
     # main()
     crawler = TaiwanHighSpeedRailCrawler()
-    start_time = "2025-06-10,19:00"
-    start_place = "台北"
-    end_place = "左營"
+    start_time = "2025-06-11,10:00"
+    end_time = "2025-06-11,19:00"
+    start_place = "南港"
+    end_place = "板橋"
+    result = crawler.search(start_time, end_time, start_place, end_place)
+    print(result)

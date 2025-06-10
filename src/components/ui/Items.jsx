@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Item_Detail from "./Item_Detail";
 import useItineraries from "@/src/hooks/useItineraries";
 
@@ -16,9 +16,12 @@ export default function Items({
     duration = "",
     price = "",
 }) {
+    // let detail = false;
     const { postItinerary } = useItineraries();
     const [showDetail,setShowDetail]=useState(false);
     const [itineraryId, setItineraryId] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+
     const icon = {
         activity:<path d="M245.83,121.63a15.53,15.53,0,0,0-9.52-7.33,73.51,73.51,0,0,0-22.17-2.22c4-19.85,1-35.55-2.06-44.86a16.15,16.15,0,0,0-18.79-10.88,85.53,85.53,0,0,0-28.55,12.12,94.58,94.58,0,0,0-27.11-33.25,16.05,16.05,0,0,0-19.26,0A94.48,94.48,0,0,0,91.26,68.46,85.53,85.53,0,0,0,62.71,56.34,16.15,16.15,0,0,0,43.92,67.22c-3,9.31-6,25-2.06,44.86a73.51,73.51,0,0,0-22.17,2.22,15.53,15.53,0,0,0-9.52,7.33,16,16,0,0,0-1.6,12.27c3.39,12.57,13.8,36.48,45.33,55.32S113.13,208,128.05,208s42.67,0,74-18.78c31.53-18.84,41.94-42.75,45.33-55.32A16,16,0,0,0,245.83,121.63ZM59.14,72.14a.2.2,0,0,1,.23-.15A70.43,70.43,0,0,1,85.18,83.66,118.65,118.65,0,0,0,80,119.17c0,18.74,3.77,34,9.11,46.28A123.59,123.59,0,0,1,69.57,140C51.55,108.62,55.3,84,59.14,72.14Zm3,103.35C35.47,159.57,26.82,140.05,24,129.7a59.82,59.82,0,0,1,22.5-1.17,129.08,129.08,0,0,0,9.15,19.41,142.28,142.28,0,0,0,34,39.56A114.92,114.92,0,0,1,62.1,175.49ZM128,190.4c-9.33-6.94-32-28.23-32-71.23C96,76.7,118.38,55.24,128,48c9.62,7.26,32,28.72,32,71.19C160,162.17,137.33,183.46,128,190.4ZM170.82,83.66A70.43,70.43,0,0,1,196.63,72a.2.2,0,0,1,.23.15C200.7,84,204.45,108.62,186.43,140a123.32,123.32,0,0,1-19.54,25.48c5.34-12.26,9.11-27.54,9.11-46.28A118.65,118.65,0,0,0,170.82,83.66ZM232,129.72c-2.77,10.25-11.4,29.81-38.09,45.77a114.92,114.92,0,0,1-27.55,12,142.28,142.28,0,0,0,34-39.56,129.08,129.08,0,0,0,9.15-19.41A59.69,59.69,0,0,1,232,129.71Z" />,
         food: <path d="M72,88V40a8,8,0,0,1,16,0V88a8,8,0,0,1-16,0ZM216,40V224a8,8,0,0,1-16,0V176H152a8,8,0,0,1-8-8,268.75,268.75,0,0,1,7.22-56.88c9.78-40.49,28.32-67.63,53.63-78.47A8,8,0,0,1,216,40ZM200,53.9c-32.17,24.57-38.47,84.42-39.7,106.1H200ZM119.89,38.69a8,8,0,1,0-15.78,2.63L112,88.63a32,32,0,0,1-64,0l7.88-47.31a8,8,0,1,0-15.78-2.63l-8,48A8.17,8.17,0,0,0,32,88a48.07,48.07,0,0,0,40,47.32V224a8,8,0,0,0,16,0V135.32A48.07,48.07,0,0,0,128,88a8.17,8.17,0,0,0-.11-1.31Z" />,
@@ -32,10 +35,32 @@ export default function Items({
         stay:   <path   d="M208,72H24V48A8,8,0,0,0,8,48V208a8,8,0,0,0,16,0V176H232v32a8,8,0,0,0,16,0V112A40,40,0,0,0,208,72ZM24,88H96v72H24Zm88,72V88h96a24,24,0,0,1,24,24v48Z"/>,
     }
 
-    const handleOnClick = async () => {
+    const handleOnClick = async (e) => {
+        console.log("🚨 CLICK DETECTED! Event:", e);
+        console.log("🚨 Button clicked! This should appear in console");
+        
+        e.preventDefault();
+        e.stopPropagation();
+        
+        console.log("=== Item Click Handler Started ===");
+        console.log("Current showDetail state:", showDetail);
+        console.log("Source:", source);
+        console.log("Item data:", { name, type, description: description?.slice(0, 50) });
+        
+        // Simple test - just set showDetail to true first
+        console.log("🔥 SETTING SHOWDETAIL TO TRUE FOR TESTING");
+        setShowDetail(true);
+        // setItineraryId(999); // Test ID
+        
+        // return; // Early return for testing
+        
         if (source === "search") {
+            console.log("Processing search source...");
             try {
-                const res = await postItinerary({
+                setIsLoading(true);
+                console.log("Loading state set to true");
+                
+                const itineraryData = {
                     type: type, 
                     name: name,
                     description: description,
@@ -46,27 +71,50 @@ export default function Items({
                     departure_time: start_time, 
                     arrival_time: end_time,
                     price: parseInt(formatPrice(price)),
-                });
-                if (res) {
-                    console.log("Itinerary created successfully:", res);
-                    // alert("Itinerary created successfully!");
-                    setShowDetail(true);
+                };
+                
+                console.log("About to call postItinerary with data:", itineraryData);
+                const res = await postItinerary(itineraryData);
+                console.log("postItinerary response:", res);
+                
+                if (res && res.id) {
+                    console.log("✅ Itinerary created successfully with ID:", res.id);
+                    console.log("Setting itineraryId to:", res.id);
                     setItineraryId(res.id);
+                    
+                    console.log("About to set showDetail to true...");
+                    setShowDetail(true);
+                    // detail = true;
+                    console.log("showDetail set to true");
                 } else {
+                    console.error("❌ Failed to create itinerary - invalid response:", res);
                     alert("Failed to create itinerary. Please try again.");
-                    setShowDetail(false);
                     return;
                 }
             } catch (error) {
-                console.error("Error creating itinerary:", error);
+                console.error("❌ Error creating itinerary:", error);
                 alert("An error occurred while creating the itinerary. Please try again.");
-                setShowDetail(false);
                 return;
+            } finally {
+                console.log("Setting loading to false");
+                setIsLoading(false);
             }
         } else {
+            console.log("Processing non-search source...");
+            setItineraryId(0);
             setShowDetail(true);
+            // detaiil = true;
+            console.log("Set showDetail to true for non-search source");
         }
+        
+        console.log("=== Item Click Handler Finished ===");
     }
+
+    const handleCancelDisplay = () => {
+        console.log("cancelDisplay called, setting showDetail to false");
+        setShowDetail(false);
+        // detail = false;
+    };
 
     const formatPrice = (price) => {
         if (!price) return "0";
@@ -77,7 +125,8 @@ export default function Items({
 
     return(
         <>
-        <button className="flex items-center gap-4 bg-[#111811] px-4 min-h-[72px] py-2 justify-between hover:bg-[#4a3a3c] transition-all"  onClick={() => handleOnClick()}>
+        <button className="flex items-center gap-4 bg-[#111811] px-4 min-h-[72px] py-2 justify-between hover:bg-[#4a3a3c] transition-all" onClick={handleOnClick} disabled={isLoading}>
+            {/* ...existing button content... */}
             <div className="flex items-center gap-4">
             <div
                 className="text-white flex items-center justify-center rounded-lg bg-[#283928] shrink-0 size-12"                
@@ -100,7 +149,7 @@ export default function Items({
                     {name}
                 </p>
                 <p className="text-[#9cba9c] text-sm font-normal leading-normal line-clamp-2">
-                {start_time?.slice(0, 10) || ""}· {duration}
+                {start_time?.slice(0, 10) || ""}· {end_time}
                 </p>
                 </div>
             </div>
@@ -110,7 +159,13 @@ export default function Items({
                 </p>
             </div>
         </button>
-        {showDetail&& <Item_Detail source={source} id={itineraryId} description={description} url={url} cancelDisplay={()=>setShowDetail(false)}/>}
+        {console.log("🎨 Rendering - showDetail:", showDetail, "Will render modal:", showDetail)}
+        {showDetail && (
+            <>
+            {console.log("📱 About to render Item_Detail with:", { source, id: itineraryId, description: description?.slice(0, 30) })}
+            <Item_Detail source={source} id={itineraryId} description={description} url={url} cancelDisplay={handleCancelDisplay}/>
+            </>
+        )}
         </>
     );
 }

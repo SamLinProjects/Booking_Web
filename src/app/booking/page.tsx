@@ -38,8 +38,10 @@ export default function Page() {
             const user = await getCurrentUser();
             if (user) {
                 setUser(user);
+                console.log("User fetched:", user);
                 const bookings = await getBookings(user.userId);
                 setBookings(bookings.itineraries);
+                console.log("Bookings fetched:", bookings.itineraries);
             } else {
                 alert("You are not logged in. Please log in to view your bookings.");
                 router.push("/login");
@@ -100,7 +102,6 @@ function Class({
 
     const filterBookings = (bookings: Itinerary[]) => {
         const now = new Date();
-        console.log("now", now);
         
         return bookings.filter((booking) => {
             if (!booking.arrival_time) return false;

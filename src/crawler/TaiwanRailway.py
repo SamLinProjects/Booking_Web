@@ -37,7 +37,7 @@ def data_Crawl(startST, endST, transfer, date_value, startOrEnd, timeRange, trai
     from webdriver_manager.chrome import ChromeDriverManager
 
     opts = Options()
-    # opts.add_argument("--headless")             # 無頭
+    opts.add_argument("--headless")             # 無頭
     opts.add_argument("--disable-gpu")          # 確保 Linux 下也能跑
     opts.add_argument("--no-sandbox")
     opts.add_argument("--disable-dev-shm-usage")
@@ -161,6 +161,7 @@ class TaiwanRailwayCrawler():
                     price = row_dict['全票']
                     results.append({
                         'type': _type,
+                        'title': "台鐵",
                         'description': description,
                         'link': link,
                         'start_time': start_date,
