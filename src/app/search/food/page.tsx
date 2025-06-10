@@ -1,5 +1,6 @@
 "use client";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import useItineraries from "@/src/hooks/useItineraries";
 import Input from "@/src/components/ui/Input";
 import Loading from "@/src/components/ui/Loading";
@@ -9,6 +10,7 @@ import Button from "@/src/components/ui/Button"
 
 
 export default function Page() {
+    const searchParams = useSearchParams();
     const { searchItineraries } = useItineraries();
     const [ searchResults, setSearchResults ] = useState<any[]>([]);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
@@ -18,6 +20,62 @@ export default function Page() {
     const [ adult, setAdult ] = useState<number>(1);
     const [ budget, setBudget ] = useState<number>(0);
     
+    // Load parameters from URL on component mount
+    useEffect(() => {
+        if (searchParams) {
+            const urlCity = searchParams.get('city');
+            const urlStartDate = searchParams.get('start_time');
+            const urlAdult = searchParams.get('adult');
+            const urlBudget = searchParams.get('budget');
+
+            if (urlCity) setCity(urlCity);
+            if (urlStartDate) setStartDate(new Date(urlStartDate));
+            if (urlAdult) setAdult(parseInt(urlAdult));
+            if (urlBudget) setBudget(parseInt(urlBudget));
+
+            // Auto-search if all required parameters are present
+            if (urlCity) {
+                handleAutoSearch(urlCity, urlStartDate, urlAdult, urlBudget);
+            }
+
+            console.log("Loaded search parameters from URL:", {
+                city: urlCity,
+                startDate: urlStartDate,
+                adult: urlAdult,
+                budget: urlBudget
+            });
+        }
+    }, [searchParams]);
+
+    const handleAutoSearch = async (city: string, startDate?: string | null, adult?: string | null, budget?: string | null) => {
+        const type = "inline";
+        setIsLoading(true);
+        try {
+            const searchStartDate = startDate ? new Date(startDate) : new Date();
+            const searchAdult = adult ? parseInt(adult) : 1;
+            let searchBudget = budget ? parseInt(budget) : 0;
+            
+            // Apply budget calculation
+            searchBudget = Math.ceil(searchBudget / 450);
+            
+            const data = await searchItineraries({
+                type: type,
+                city: city,
+                start_time: searchStartDate.toISOString(),
+                adult: searchAdult,
+                budget: searchBudget
+            });
+            if (data) {
+                setSearchResults(data.results || []);
+                console.log("Auto search results:", data.results);
+            }
+        } catch (error) {
+            console.error("Auto search error:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const formatDateTimeLocal = (date: Date) => {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');

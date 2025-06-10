@@ -37,8 +37,8 @@ def get_user_itinerary(user_id):
             'name': itinerary.name,
             'start': itinerary.start,
             'destination': itinerary.destination,
-            'departure_time': itinerary.departure_time.isoformat() if itinerary.departure_time else None,
-            'arrival_time': itinerary.arrival_time.isoformat() if itinerary.arrival_time else None,
+            'departure_time': itinerary.departure_time.format() if itinerary.departure_time else None,
+            'arrival_time': itinerary.arrival_time.format() if itinerary.arrival_time else None,
         }
         for itinerary in user.itineraries
     ]

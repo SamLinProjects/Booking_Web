@@ -26,8 +26,8 @@ export default function Page() {
             const urlKeyword = searchParams.get('keyword');
             const urlCountry = searchParams.get('country');
             const urlCity = searchParams.get('city');
-            const urlStartDate = searchParams.get('startDate');
-            const urlEndDate = searchParams.get('endDate');
+            const urlStartDate = searchParams.get('start_time');
+            const urlEndDate = searchParams.get('end_time');
 
             if (urlKeyword) setKeyword(urlKeyword);
             if (urlCountry) setCountry(urlCountry);
