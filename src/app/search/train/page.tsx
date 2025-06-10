@@ -241,15 +241,18 @@ export default function Page() {
                 <Input label="Departure Time" type="datetime-local" value={formatDateTimeLocal(startDate)} defaultValue={formatDateTimeLocal(startDate)} onChange={(e: ChangeEvent<HTMLInputElement>) => setStartDate(new Date(e.target.value))} />
                 <Input label="Arrival Time" type="datetime-local" value={formatDateTimeLocal(endDate)} defaultValue={formatDateTimeLocal(endDate)} onChange={(e: ChangeEvent<HTMLInputElement>) => setEndDate(new Date(e.target.value))} />
             </div>
-            <button className="mt-4 w-40 bg-green-900 text-white px-4 py-2 rounded" onClick={() => handleSearch()}>
-                Search Trains
-            </button>
+            <Button onClick={() => handleSearch()} text="Search Train"/>
         </div>
         {isLoading && <Loading size="xl"/>}
         {!isLoading && searchResults.length > 0 && (
             searchResults.map((item, index) => (
                 <Item key={index} type="transport" source="search" name={item.title} description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
             ))
+        )}
+        {!isLoading && searchResults.length === 0 && (
+            <div className="text-center text-gray-500 mt-8">
+                No results found.
+            </div>
         )}
         </>
     );

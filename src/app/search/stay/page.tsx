@@ -132,7 +132,7 @@ export default function Page() {
     const countries = [
         { value: 'tw', label: '台灣' },
         { value: 'jp', label: '日本' },
-        { value: 'ch', label: '中國大陸' },
+        { value: 'ch', label: '中國' },
       ];
       type CountryCode = typeof countries[number]["value"]; // "tw" | "jp" | "ch"
 
@@ -183,6 +183,11 @@ export default function Page() {
             searchResults.map((item, index) => (
                 <Item key={index} type="stay" name={item.title} source="search" description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
             ))
+        )}
+        {!isLoading && searchResults.length === 0 && (
+            <div className="text-center text-gray-500 mt-8">
+                No results found.
+            </div>
         )}
         </>
     );

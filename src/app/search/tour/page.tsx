@@ -96,8 +96,8 @@ export default function Page() {
             const data = await searchItineraries({
                 type: type,
                 keyword: keyword,
-                country: country,
-                city: city,
+                country: country.toLocaleLowerCase(),
+                city: city.toLocaleLowerCase(),
                 start_time: startDate.toISOString().split('T')[0].replace('-', ''), 
                 end_time: endDate.toISOString().split('T')[0].replace('-', '').replace('-', ''),
             });
@@ -117,7 +117,7 @@ export default function Page() {
     const countries = [
         { value: 'tw', label: '台灣' },
         { value: 'jp', label: '日本' },
-        { value: 'ch', label: '中國大陸' },
+        { value: 'ch', label: '中國' },
       ];
       type CountryCode = typeof countries[number]["value"]; // "tw" | "jp" | "ch"
 
@@ -129,26 +129,26 @@ export default function Page() {
       // 讓 cities 的 key 只能是 CountryCode 中的值
       const cities: Record<CountryCode, CityOption[]> = {
         tw:[
-        { value: 'Taipei', label: '台北' },
-        { value: 'Taichung', label: '台中' },
-        { value: 'Kaoshiung', label: '高雄' },
-        { value: 'Tainan', label: '台南' },
-        { value: "Yilan County", label: '宜蘭'},
-        { value: "Taitung", label: '台東'}],
+        { value: 'taipei', label: '台北' },
+        { value: 'taichung', label: '台中' },
+        { value: 'kaoshiung', label: '高雄' },
+        { value: 'tainan', label: '台南' },
+        { value: "yilan County", label: '宜蘭'},
+        { value: "taitung", label: '台東'}],
         jp:[
-        { value: 'Tokyo', label: '東京' },
-        { value: 'Okinawa', label: '沖繩' },
-        { value: 'Hokkaido', label: '北海道' },
+        { value: 'tokyo', label: '東京' },
+        { value: 'okinawa', label: '沖繩' },
+        { value: 'hokkaido', label: '北海道' },
         ],
         ch:[
-        { value: 'Shanhai', label: '上海' },
-        { value: 'Beijing', label: '北京' },
-        { value: 'Hongkong', label: '香港' },
+        { value: 'shanhai', label: '上海' },
+        { value: 'beijing', label: '北京' },
+        { value: 'hongkong', label: '香港' },
         ],
     }
 
-    const keywords = [{ value: 'tour', label: 'tour' },
-                    { value: 'tickets', label: 'tickets' },];
+    const keywords = [{ value: 'day-tours', label: 'tour' },
+                    { value: 'attraction-tickets', label: 'tickets' },];
 
     return(
         <>
@@ -167,6 +167,11 @@ export default function Page() {
             searchResults.map((item, index) => (
                 <Item type={keyword === "attraction-tickets" ? "attraction" : "activity"} source="search" name={item.title} description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
             ))
+        )}
+        {!isLoading && searchResults.length === 0 && (
+            <div className="text-center text-gray-500 mt-8">
+                No results found.
+            </div>
         )}
         </>
     );

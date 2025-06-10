@@ -105,6 +105,7 @@ export default function useAccount() {
     // Refresh Token
     const refreshToken = async () => {
         const refreshToken = localStorage.getItem('refresh_token');
+        console.log("Refresh Token:", refreshToken);
         if (!refreshToken) {
             alert("You need to log in first!");
             return;
@@ -135,6 +136,7 @@ export default function useAccount() {
     // Logout
     const logoutUser = async () => {
         const accessToken = localStorage.getItem('access_token');
+        console.log("Access Token:", accessToken);
         if (!accessToken) {
             alert("You need to log in first!");
             return;
@@ -156,7 +158,10 @@ export default function useAccount() {
                 router.refresh();
                 return res.ok;
             } else {
+                console.error("Logout failed:", data);
                 alert("Logout failed: " + data.message);
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
             }
         } catch (error) {
             console.error("Error during logout:", error);

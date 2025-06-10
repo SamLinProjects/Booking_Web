@@ -10,7 +10,10 @@ export default function Item_Detail({
     description="",
     url="",
     Booked = false,
-    cancelDisplay=()=>{}
+    cancelDisplay=()=>{},
+    basic = "",
+    end_basic = "",
+    price = "",
 }) {
     const router = useRouter();
     const { isloggedIn, getCurrentUser } = useAuth();
@@ -119,6 +122,14 @@ export default function Item_Detail({
             </div>
             <div className="col-span-2 grid grid-cols-subgrid border-t border-t-[#3b543b] py-5">
                 <p className="text-[#9cba9c] text-sm font-normal leading-normal">
+                basic information
+                </p>
+                <p className="text-white text-sm font-normal leading-normal">
+                {`${basic} ==> ${end_basic}`}
+                </p>
+            </div>
+            <div className="col-span-2 grid grid-cols-subgrid border-t border-t-[#3b543b] py-5">
+                <p className="text-[#9cba9c] text-sm font-normal leading-normal">
                 connection
                 </p>
                 <a className={`text-white text-sm font-normal leading-normal overflow-x-hidden`} href={url}>
@@ -152,7 +163,7 @@ export default function Item_Detail({
             >
                 <span className="truncate">Back</span>
             </button>
-            {isloggedIn && !booked &&
+            {isloggedIn && !Booked &&
                 <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#283928] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#c5d4c5] hover:text-[#283928] transition-all" 
                     onClick={() => handleBook()}
                 >

@@ -53,10 +53,7 @@ export default function Page() {
         try {
             const searchStartDate = startDate ? new Date(startDate) : new Date();
             const searchAdult = adult ? parseInt(adult) : 1;
-            let searchBudget = budget ? parseInt(budget) : 0;
-            
-            // Apply budget calculation
-            searchBudget = Math.ceil(searchBudget / 450);
+            const searchBudget = Math.ceil(budget ? parseInt(budget) / 450 : 0);
             
             const data = await searchItineraries({
                 type: type,
@@ -98,8 +95,8 @@ export default function Page() {
             alert("Please select at least one adult.");
             return;
         }
-        if (budget < 0) {
-            alert("Budget cannot be negative.");
+        if (budget <= 0) {
+            alert("Budget should be positive.");
             return;
         } else if (budget > 2000) {
             alert("Budget cannot exceed 2000.");
@@ -116,7 +113,7 @@ export default function Page() {
                 city: city,
                 start_time: startDate.toISOString(),
                 adult: adult,
-                budget: budget
+                budget: Math.ceil(budget / 450) + 1, 
             });
             if (data) {
                 setSearchResults(data.results || []);
@@ -173,6 +170,11 @@ export default function Page() {
             searchResults.map((item, index) => (
                 <Item type="food" source="search" name={item.title} description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
             ))
+        )}
+        {!isLoading && searchResults.length === 0 && (
+            <div className="text-center text-gray-500 mt-8">
+                No results found.
+            </div>
         )}
         </>
     );

@@ -138,6 +138,7 @@ function Class({
         </h2>
         {filteredBookings.map((booking, index) => (
             <Items
+                booked = {true}
                 key={booking.id || index}
                 type={booking.type || ""}
                 source="booking"

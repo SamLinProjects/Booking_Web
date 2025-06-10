@@ -96,20 +96,20 @@ const SnakeGame: React.FC<SnakeGameProp> = ({
 
   // Handle keyboard input
   const handleKeyPress = useCallback((e: KeyboardEvent) => {
-    e.preventDefault();
+    
 
     setGameState(prevState => {
       let newDirection = { ...prevState.direction };
 
       switch (e.key) {
         case 'ArrowUp':   case 'w':   case 'W':
-          if (prevState.direction.y === 0) newDirection = { x: 0, y: -1 };  break;
+          if (prevState.direction.y === 0) newDirection = { x: 0, y: -1 }; e.preventDefault(); break;
         case 'ArrowDown':   case 's':   case 'S':
-          if (prevState.direction.y === 0) newDirection = { x: 0, y: 1 }; break;
+          if (prevState.direction.y === 0) newDirection = { x: 0, y: 1 }; e.preventDefault();break;
         case 'ArrowLeft':   case 'a':   case 'A':
-          if (prevState.direction.x === 0) newDirection = { x: -1, y: 0 };  break;
+          if (prevState.direction.x === 0) newDirection = { x: -1, y: 0 }; e.preventDefault(); break;
         case 'ArrowRight':      case 'd':   case 'D':
-          if (prevState.direction.x === 0) newDirection = { x: 1, y: 0 }; break;
+          if (prevState.direction.x === 0) newDirection = { x: 1, y: 0 };e.preventDefault(); break;
       }
       return { ...prevState, direction: newDirection };
     })}, []);
