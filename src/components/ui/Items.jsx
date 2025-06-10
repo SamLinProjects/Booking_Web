@@ -110,7 +110,7 @@ export default function Items({
                 </p>
             </div>
         </button>
-        {showDetail&& <Item_Detail id={itineraryId} description={description} url={url} cancelDisplay={()=>setShowDetail(false)}/>}
+        {showDetail&& <Item_Detail source={source} id={itineraryId} description={description} url={url} cancelDisplay={()=>setShowDetail(false)}/>}
         </>
     );
 }

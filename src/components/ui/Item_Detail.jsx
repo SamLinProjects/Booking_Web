@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import useRouter from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import useAuth from '../../hooks/useAuth';
 import useBooking from '../../hooks/useBooking';
 
 export default function Item_Detail({
     id,
+    source,
     description="",
     url="",
     Booked = false,
@@ -20,7 +21,7 @@ export default function Item_Detail({
         const fetchUser = async () => {
             if (isloggedIn) {
                 const user = await getCurrentUser();
-                console.log(id);
+                // console.log(id);
                 if (user) {
                     setBooked(user.booked);
                     setUser(user);
@@ -36,8 +37,8 @@ export default function Item_Detail({
             return;
         }
         try {
-            console.log("Booking item with ID:", id);
-            console.log("User ID:", user.userId);
+            // console.log("Booking item with ID:", id);
+            // console.log("User ID:", user.userId);
             const res = await postBooking({
                 user_id: user.userId, 
                 itinerary_id: id,
@@ -93,7 +94,7 @@ export default function Item_Detail({
                 </a>
             </div>
             </div>
-            {isloggedIn && 
+            {isloggedIn && source !== "booking" &&
                 <>
                 <h2 className="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
                 Booking Information
@@ -116,7 +117,7 @@ export default function Item_Detail({
             >
                 <span className="truncate">Back</span>
             </button>
-            {isloggedIn && 
+            {isloggedIn && source !== "booking" &&
                 <button className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-4 bg-[#283928] text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#c5d4c5] hover:text-[#283928] transition-all" 
                     onClick={() => handleBook()}
                 >

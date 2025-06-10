@@ -1,14 +1,19 @@
 import React, { useRef, useEffect} from 'react';
+import useMCP from '../hooks/useMCP';
 import Bubble from './SpeechBubble';
 
 export default function ChatDialog() {
     const chatRef = useRef<HTMLDivElement>(null);
+    const { interpret } = useMCP();
+    const [ message, setMessage ] = React.useState<string>("");
+
     useEffect(() => {
         if (chatRef.current) {
           // 把滾動條移到容器底部
           chatRef.current.scrollTop = chatRef.current.scrollHeight;
         }
-      });
+    });
+
     return (
         <div className="fixed bottom-4 right-20 z-25 transition-all px-4 py-2 max-w-[600px]">
         <div className="layout-container flex flex-col w-[600px] h-[400px] bg-[#445244] text-white shadow-lg rounded-xl px-6 py-4 animate-fadeIn transition-all relative">

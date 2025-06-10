@@ -55,8 +55,8 @@ export default function useAuth() {
     useEffect(() => {
         checkAuthStatus();
 
-        const handleStorageChange = () => {
-            checkAuthStatus();
+        const handleStorageChange = async () => {
+            await checkAuthStatus();
         };
 
         window.addEventListener('storage', handleStorageChange);
