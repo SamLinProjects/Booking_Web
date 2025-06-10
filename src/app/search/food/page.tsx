@@ -5,6 +5,8 @@ import Input from "@/src/components/ui/Input";
 import Loading from "@/src/components/ui/Loading";
 import Item from "@/src/components/ui/Items";
 import Dropdown from "@/src/components/ui/Dropdown";
+import Button from "@/src/components/ui/Button"
+
 
 export default function Page() {
     const { searchItineraries } = useItineraries();
@@ -106,9 +108,7 @@ export default function Page() {
                 <Input label="Adults" type="number" value={adult} onChange={(e: ChangeEvent<HTMLInputElement>) => setAdult(parseInt(e.target.value))} />
                 <Input label="Budget" type="number" value={budget} onChange={(e: ChangeEvent<HTMLInputElement>) => setBudget(parseInt(e.target.value))} />
             </div>
-            <button className="mt-4 w-40 bg-green-900 text-white px-4 py-2 rounded" onClick={() => handleSearch()}>
-                Search Foods
-            </button>
+            <Button onClick={() => handleSearch()} text="Search Food"/>
         </div>
         {isLoading && <Loading size="xl"/>}
         {!isLoading && searchResults.length > 0 && (

@@ -1,14 +1,15 @@
 "use client";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import useItineraries from "@/src/hooks/useItineraries";
 import Input from "@/src/components/ui/Input";
 import Loading from "@/src/components/ui/Loading";
 import Item from "@/src/components/ui/Items";
 import Button from "@/src/components/ui/Button"
 import Dropdown from "@/src/components/ui/Dropdown"
-import { start } from "repl";
 
 export default function Page() {
+    const searchParams = useSearchParams();
     const { searchItineraries } = useItineraries();
     const [ searchResults, setSearchResults ] = useState<any[]>([]);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
@@ -18,6 +19,62 @@ export default function Page() {
     const [ city, setCity ] = useState<string>("");
     const [ startDate, setStartDate ] = useState<Date>(new Date());
     const [ endDate, setEndDate ] = useState<Date>(new Date());
+
+    // Load parameters from URL on component mount
+    useEffect(() => {
+        if (searchParams) {
+            const urlKeyword = searchParams.get('keyword');
+            const urlCountry = searchParams.get('country');
+            const urlCity = searchParams.get('city');
+            const urlStartDate = searchParams.get('startDate');
+            const urlEndDate = searchParams.get('endDate');
+
+            if (urlKeyword) setKeyword(urlKeyword);
+            if (urlCountry) setCountry(urlCountry);
+            if (urlCity) setCity(urlCity);
+            if (urlStartDate) setStartDate(new Date(urlStartDate));
+            if (urlEndDate) setEndDate(new Date(urlEndDate));
+
+            // Auto-search if all required parameters are present
+            if (urlKeyword && urlCountry && urlCity) {
+                handleAutoSearch(urlKeyword, urlCountry, urlCity, urlStartDate, urlEndDate);
+            }
+
+            console.log("Loaded search parameters from URL:", {
+                keyword: urlKeyword,
+                country: urlCountry,
+                city: urlCity,
+                startDate: urlStartDate,
+                endDate: urlEndDate
+            });
+        }
+    }, [searchParams]);
+
+    const handleAutoSearch = async (keyword: string, country: string, city: string, startDate?: string | null, endDate?: string | null) => {
+        const type = "kkday";
+        setIsLoading(true);
+        try {
+            const searchStartDate = startDate ? new Date(startDate) : new Date();
+            const searchEndDate = endDate ? new Date(endDate) : new Date();
+            
+            const data = await searchItineraries({
+                type: type,
+                keyword: keyword,
+                country: country,
+                city: city,
+                start_time: searchStartDate.toISOString().split('T')[0].replace('-', ''), 
+                end_time: searchEndDate.toISOString().split('T')[0].replace('-', '').replace('-', ''),
+            });
+            if (data) {
+                setSearchResults(data.results || []);
+                console.log("Auto search results:", data.results);
+            }
+        } catch (error) {
+            console.error("Auto search error:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleSearch = async () => {
         if (!country || !city) {
@@ -103,7 +160,7 @@ export default function Page() {
                 <Input label="Start Date" type="date" value={startDate.toISOString().split('T')[0]} defaultValue={startDate.toISOString().split('T')[0]} onChange={(e: ChangeEvent<HTMLInputElement>) => setStartDate(new Date(e.target.value))} />
                 <Input label="End Date" type="date" value={endDate.toISOString().split('T')[0]} defaultValue={endDate.toISOString().split('T')[0]} onChange={(e: ChangeEvent<HTMLInputElement>) => setEndDate(new Date(e.target.value))} />
             </div>
-            <Button onClick={() => handleSearch()} text="Search Stays"/>
+            <Button onClick={() => handleSearch()} text="Search Tour"/>
         </div>
         {isLoading && <Loading size="xl"/>}
         {!isLoading && searchResults.length > 0 && (
