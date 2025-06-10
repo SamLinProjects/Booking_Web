@@ -84,13 +84,18 @@ start_place 和 end_place 必須是這些車站名稱。
 如果資訊不足，status = "fail"，data = {}，並友善詢問缺少的資訊。
 如果資訊充足，status = "success"，正確填入data欄位， **service_type 很重要一定要有**。
 
-⚠️ 非常重要：請**只回傳 JSON 格式本身**，不要額外補充說明、不要用 markdown code block，不要加任何前綴文字，請直接純粹回傳 JSON 格式。
+⚠️ 非常重要：請**只回傳 JSON 格式本身**，不要額外補充說明、不要用 markdown code block，不要加任何前綴文字，請直接純粹回傳 JSON 格式，並且無論如何一定一定一定要依照格式回傳。
 """.strip()
 
 # --------------------------------------------------------------------------- #
 # 主要 API
 # --------------------------------------------------------------------------- #
 
+@mcp_bp.route("/mcp/clear", methods=["DELETE"])
+def clear_history():
+    global _GLOBAL_HISTORY
+    _GLOBAL_HISTORY = []
+    return jsonify({"status": "success", "message": "History cleared"}), 200
 
 @mcp_bp.route("/mcp/parse", methods=["POST"])
 def parse_trip_command():
@@ -147,7 +152,7 @@ def parse_trip_command():
     _GLOBAL_HISTORY.append({"role": "user", "content": user_cmd})
     _GLOBAL_HISTORY.append({"role": "assistant", "content": reply_msg})
 
-    MAX_HISTORY_LEN = 10  # 保留最近 10 輪對話
+    MAX_HISTORY_LEN = 50  # 保留最近 50 輪對話
     if len(_GLOBAL_HISTORY) > MAX_HISTORY_LEN * 2:
         _GLOBAL_HISTORY = _GLOBAL_HISTORY[-MAX_HISTORY_LEN * 2:]
 
