@@ -26,10 +26,12 @@ SYSTEM_PROMPT = """
 1. **booking** - 住宿訂房 (Booking.com)
 2. **inline** - 餐廳訂位 (OpenTable)
 3. **kkday** - 旅遊行程活動
-4. **taiwan_railway** - 台鐵訂票
-5. **high_speed_rail** - 高鐵訂票
+4. **twr** - 台鐵訂票
+5. **thsr** - 高鐵訂票
 
 請根據用戶輸入判斷服務類型，並收集對應的必要參數：
+
+**回覆的時候注意到你並沒有真的已預訂，只是協助查詢而已**
 
 **BOOKING (住宿)**:
 - country: "tw" 或 "jp"
@@ -58,16 +60,21 @@ SYSTEM_PROMPT = """
 - end_time: "YYYY-MM-DD,HH:MM"
 - start_place: 起站名稱
 - end_place: 終站名稱
+注意到台鐵習慣用的站名都是「臺」而不是「台」，請使用「臺」字。
+時間只能是00分或者是30分，不能是其他分鐘，自動幫使用者依情境選擇適合的時間填入。  
 
 **HIGH_SPEED_RAIL (高鐵)**:
 - start_time: "YYYY-MM-DD,HH:MM"
 - start_place: 起站名稱
 - end_place: 終站名稱
+高鐵車站清單有:新竹、苗栗、台中、彰化、雲林、嘉義、台南、南港、台北、板橋、桃園、左營
+時間只能是00分或者是30分，不能是其他分鐘，自動幫使用者依情境選擇適合的時間填入。  
+start_place 和 end_place 必須是這些車站名稱。
 
 回覆格式：
 {
     "status": "success" 或 "fail",
-    "service_type": "booking/inline/kkday/taiwan_railway/high_speed_rail",
+    "service_type": "booking/inline/kkday/twr/thsr",
     "data": {
         // 根據service_type填入對應參數
     },
@@ -126,11 +133,13 @@ def parse_trip_command():
 
         json_str = raw_reply[start_idx:end_idx]
         j = json.loads(json_str)
+        service_type = j.get("service_type", "").strip().lower()
         status = j.get("status", "fail")
         data_field = j.get("data", {}) if status == "success" else {}
         reply_msg = j.get("message", "")
     except Exception as e:
         status = "fail"
+        service_type = ""
         data_field = {}
         reply_msg = f"無法解析 LLM 回傳內容，原始內容：{raw_reply}"
 
@@ -147,7 +156,7 @@ def parse_trip_command():
         response=json.dumps(
             {
                 "status":     status,
-                "service_type": j.get("service_type", ""),
+                "service_type": service_type,
                 "data":       data_field,
                 "message":    reply_msg,
                 "history":    _GLOBAL_HISTORY,
