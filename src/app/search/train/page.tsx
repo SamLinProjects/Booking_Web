@@ -20,11 +20,29 @@ export default function Page() {
     const [ endPlace, setEndPlace ] = useState<string>("");
     const [ startDate, setStartDate ] = useState<Date>(new Date());
     const [ endDate, setEndDate ] = useState<Date>(new Date());
-
+    
+    // Load search results from sessionStorage on component mount
+    useEffect(() => {
+        const savedResults = sessionStorage.getItem('train-search-results');
+        if (savedResults) {
+            try {
+                const parsedResults = JSON.parse(savedResults);
+                setSearchResults(parsedResults);
+            } catch (error) {
+                console.error('Error parsing saved search results:', error);
+            }
+        }
+    }, []);
+    
     // Load parameters from URL on component mount
     useEffect(() => {
         const fetchParams = async () => {
-            if (searchParams) {
+            // Create a unique key for this search session based on URL params
+            const currentParams = searchParams?.toString() || '';
+            const sessionKey = `train-auto-search-${currentParams}`;
+            const hasAlreadySearched = sessionStorage.getItem(sessionKey);
+
+            if (searchParams && !hasAlreadySearched && currentParams) {
                 const urlTrainType = searchParams.get('type');
                 const urlStartPlace = searchParams.get('start_place');
                 const urlEndPlace = searchParams.get('end_place');
@@ -39,17 +57,32 @@ export default function Page() {
                     endDate: urlEndDate
                 });
     
-                if (urlTrainType) await setTrainType(urlTrainType);
-                if (urlStartPlace) await setStartPlace(urlStartPlace);
-                if (urlEndPlace) await setEndPlace(urlEndPlace);
-                if (urlStartDate) await setStartDate(new Date(urlStartDate));
-                if (urlEndDate) await setEndDate(new Date(urlEndDate));
+                if (urlTrainType) setTrainType(urlTrainType);
+                if (urlStartPlace) setStartPlace(urlStartPlace);
+                if (urlEndPlace) setEndPlace(urlEndPlace);
+                if (urlStartDate) setStartDate(new Date(urlStartDate));
+                if (urlEndDate) setEndDate(new Date(urlEndDate));
     
                 // Auto-search if all required parameters are present
                 if (urlTrainType && urlStartPlace && urlEndPlace) {
-                    handleAutoSearch(urlTrainType, urlStartPlace, urlEndPlace, urlStartDate, urlEndDate);
+                    await handleAutoSearch(urlTrainType, urlStartPlace, urlEndPlace, urlStartDate, urlEndDate);
+                    // Mark this search as completed for this session
+                    sessionStorage.setItem(sessionKey, 'true');
                 }
-            }  
+            } else if (currentParams) {
+                // If we already searched for these params, restore the form state
+                const urlTrainType = searchParams?.get('type');
+                const urlStartPlace = searchParams?.get('start_place');
+                const urlEndPlace = searchParams?.get('end_place');
+                const urlStartDate = searchParams?.get('start_time');
+                const urlEndDate = searchParams?.get('end_time');
+
+                if (urlTrainType) setTrainType(urlTrainType);
+                if (urlStartPlace) setStartPlace(urlStartPlace);
+                if (urlEndPlace) setEndPlace(urlEndPlace);
+                if (urlStartDate) setStartDate(new Date(urlStartDate));
+                if (urlEndDate) setEndDate(new Date(urlEndDate));
+            }
         }
 
         fetchParams();
@@ -70,8 +103,11 @@ export default function Page() {
             });
             console.log(data);
             if (data) {
-                setSearchResults(data.results || []);
-                console.log("Auto search results:", data.results);
+                const results = data.results || [];
+                setSearchResults(results);
+                // Save results to sessionStorage
+                sessionStorage.setItem('train-search-results', JSON.stringify(results));
+                console.log("Auto search results:", results);
             }
         } catch (error) {
             console.error("Auto search error:", error);
@@ -146,7 +182,25 @@ export default function Page() {
             alert("Please fill in all fields.");
             return;
         }
-        if (startDate >= endDate) {
+        let adjustedStartDate = new Date(startDate);
+        let adjustedEndDate = new Date(endDate);
+
+        // Adjust start date to nearest 30 minutes (round down)
+        if (adjustedStartDate.getMinutes() % 30 !== 0) {
+            const minutesToSubtract = adjustedStartDate.getMinutes() % 30;
+            adjustedStartDate = new Date(adjustedStartDate.getTime() - (minutesToSubtract * 60 * 1000));
+            console.log("Adjusted start date to nearest 30 minutes:", adjustedStartDate);
+            setStartDate(adjustedStartDate); // Update state for UI
+        }
+
+        // Adjust end date to nearest 30 minutes (round down)
+        if (adjustedEndDate.getMinutes() % 30 !== 0) {
+            const minutesToSubtract = adjustedEndDate.getMinutes() % 30;
+            adjustedEndDate = new Date(adjustedEndDate.getTime() - (minutesToSubtract * 60 * 1000));
+            console.log("Adjusted end date to nearest 30 minutes:", adjustedEndDate);
+            setEndDate(adjustedEndDate); // Update state for UI
+        }
+        if (adjustedStartDate >= adjustedEndDate) {
             alert("End date must be after start date.");
             return;
         }
@@ -158,17 +212,20 @@ export default function Page() {
                 type: type,
                 start_place: startPlace,
                 end_place: endPlace,
-                start_time: formatDateTimeLocal(startDate).replace('T', ','),
-                end_time: formatDateTimeLocal(endDate).replace('T', ',')
+                start_time: formatDateTimeLocal(adjustedStartDate).replace('T', ','),
+                end_time: formatDateTimeLocal(adjustedEndDate).replace('T', ',')
             });
             if (data) {
-                setSearchResults(data.results || []);
-                console.log("Search results:", data.results);
+                const results = data.results || [];
+                setSearchResults(results);
+                // Save results to sessionStorage
+                sessionStorage.setItem('train-search-results', JSON.stringify(results));
+                console.log("Search results:", results);
                 setIsLoading(false);
             }
         } catch (error) {
             console.error("Error during search:", error);
-            alert("An error occurred while searching for stays. Please try again.");
+            alert("An error occurred while searching for trains. Please try again.");
             setIsLoading(false);
             setSearchResults([]);
         }
@@ -191,7 +248,7 @@ export default function Page() {
         {isLoading && <Loading size="xl"/>}
         {!isLoading && searchResults.length > 0 && (
             searchResults.map((item, index) => (
-                <Item type="stay" source="search" name={item.title} description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
+                <Item key={index} type="transport" source="search" name={item.title} description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
             ))
         )}
         </>

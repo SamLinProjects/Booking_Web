@@ -28,8 +28,8 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    access_token = create_access_token(identity=new_user.id)
-    refresh_token = create_refresh_token(identity=new_user.id)
+    access_token = create_access_token(identity=str(new_user.id))
+    refresh_token = create_refresh_token(identity=str(new_user.id))
 
     jti = decode_token(refresh_token)["jti"]
     refresh = RefreshToken(jti=jti, user_id=new_user.id)
@@ -56,8 +56,8 @@ def login():
     if not user or not bcrypt.check_password_hash(user.password_hash, password):
         return jsonify({'error': 'Invalid credentials'}), 401
     
-    access_token = create_access_token(identity=user.id)
-    refresh_token = create_refresh_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
+    refresh_token = create_refresh_token(identity=str(user.id))
 
     jti = decode_token(refresh_token)["jti"]
     refresh = RefreshToken(jti=jti, user_id=user.id)

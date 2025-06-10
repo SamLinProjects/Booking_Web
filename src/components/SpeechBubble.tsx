@@ -17,7 +17,7 @@ export default function Bubble({
                 {speaker === "User" ? "You" : "LM"}
             </p>
             <p className="text-base font-normal leading-normal flex max-w-[360px] rounded-xl px-4 py-3 bg-[#283928] text-white">
-                {message}
+                {message.replace('無法解析 LLM 回傳內容，原始內容：', '')}
             </p>
         </div>
     );
