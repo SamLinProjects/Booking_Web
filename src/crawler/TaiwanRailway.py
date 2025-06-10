@@ -37,13 +37,14 @@ def data_Crawl(startST, endST, transfer, date_value, startOrEnd, timeRange, trai
     from webdriver_manager.chrome import ChromeDriverManager
 
     opts = Options()
-    opts.add_argument("--headless")             # 無頭
+    # opts.add_argument("--headless")             # 無頭
     opts.add_argument("--disable-gpu")          # 確保 Linux 下也能跑
     opts.add_argument("--no-sandbox")
     opts.add_argument("--disable-dev-shm-usage")
     opts.add_argument("window-size=1920,1080")  # 設定視窗大小，避免有些元素在小尺寸下隱藏
 
     service = Service(ChromeDriverManager().install())
+    print("正在爬取資料...")
     browser = webdriver.Chrome(service=service, options=opts)
 
     # 2. 剩下程式不動
@@ -200,6 +201,6 @@ def main():
 if __name__ == "__main__":
     # main()
     crawler = TaiwanRailwayCrawler()
-    results = crawler.search("2025-06-10,10:00", "2025-06-10,12:30", "臺北", "高雄")
+    results = crawler.search("2025-06-11,12:00", "2025-06-11,14:30", "臺中", "高雄")
     for result in results:
         print(result)
