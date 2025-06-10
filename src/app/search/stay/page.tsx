@@ -1,5 +1,6 @@
 "use client";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import useItineraries from "@/src/hooks/useItineraries";
 import Input from "@/src/components/ui/Input";
 import Loading from "@/src/components/ui/Loading";
@@ -8,6 +9,7 @@ import Dropdown from "@/src/components/ui/Dropdown"
 import Button from "@/src/components/ui/Button"
 
 export default function Page() {
+    const searchParams = useSearchParams();
     const { searchItineraries } = useItineraries();
     const [ searchResults, setSearchResults ] = useState<any[]>([]);
     const [ isLoading, setIsLoading ] = useState<boolean>(false);
@@ -19,6 +21,73 @@ export default function Page() {
     const [ adult, setAdult ] = useState<number>(1);
     const [ child, setChild ] = useState<number>(0);
     const [ room, setRoom ] = useState<number>(1);
+
+    // Load parameters from URL on component mount
+    useEffect(() => {
+        if (searchParams) {
+            const urlCountry = searchParams.get('country');
+            const urlCity = searchParams.get('city');
+            const urlStartDate = searchParams.get('start_time');
+            const urlEndDate = searchParams.get('end_time');
+            const urlAdult = searchParams.get('adult');
+            const urlChild = searchParams.get('child');
+            const urlRoom = searchParams.get('room');
+
+            if (urlCountry) setCountry(urlCountry);
+            if (urlCity) setCity(urlCity);
+            if (urlStartDate) setStartDate(new Date(urlStartDate));
+            if (urlEndDate) setEndDate(new Date(urlEndDate));
+            if (urlAdult) setAdult(parseInt(urlAdult));
+            if (urlChild) setChild(parseInt(urlChild));
+            if (urlRoom) setRoom(parseInt(urlRoom));
+
+            // Auto-search if all required parameters are present
+            if (urlCountry && urlCity) {
+                handleAutoSearch(urlCountry, urlCity, urlStartDate, urlEndDate, urlAdult, urlChild, urlRoom);
+            }
+
+            console.log("Loaded search parameters from URL:", {
+                country: urlCountry,
+                city: urlCity,
+                startDate: urlStartDate,
+                endDate: urlEndDate,
+                adult: urlAdult,
+                child: urlChild,
+                room: urlRoom
+            });
+        }
+    }, [searchParams]);
+
+    const handleAutoSearch = async (country: string, city: string, startDate?: string | null, endDate?: string | null, adult?: string | null, child?: string | null, room?: string | null) => {
+        const type = "booking";
+        setIsLoading(true);
+        try {
+            const searchStartDate = startDate ? new Date(startDate) : new Date();
+            const searchEndDate = endDate ? new Date(endDate) : new Date();
+            const searchAdult = adult ? parseInt(adult) : 1;
+            const searchChild = child ? parseInt(child) : 0;
+            const searchRoom = room ? parseInt(room) : 1;
+            
+            const data = await searchItineraries({
+                type: type,
+                country: country,
+                city: city,
+                start_time: searchStartDate.toISOString(),
+                end_time: searchEndDate.toISOString(),
+                adult: searchAdult,
+                child: searchChild,
+                room: searchRoom
+            });
+            if (data) {
+                setSearchResults(data.results || []);
+                console.log("Auto search results:", data.results);
+            }
+        } catch (error) {
+            console.error("Auto search error:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleSearch = async () => {
         console.log([country,city])
@@ -112,7 +181,7 @@ export default function Page() {
         {isLoading && <Loading size="xl"/>}
         {!isLoading && searchResults.length > 0 && (
             searchResults.map((item, index) => (
-                <Item type="stay" name={item.title} source="search" description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
+                <Item key={index} type="stay" name={item.title} source="search" description={item.description} image={item.image} url={item.link} start_time={item.start_time} end_time={item.end_time} start_place={item.start_place} price={item.price} />
             ))
         )}
         </>
