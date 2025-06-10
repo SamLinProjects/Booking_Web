@@ -6,6 +6,8 @@ import Input from "@/src/components/ui/Input";
 import Loading from "@/src/components/ui/Loading";
 import Item from "@/src/components/ui/Items";
 import Dropdown from "@/src/components/ui/Dropdown";
+import Button from "@/src/components/ui/Button"
+
 
 export default function Page() {
     const searchParams = useSearchParams();

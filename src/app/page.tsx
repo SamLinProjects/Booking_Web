@@ -30,13 +30,12 @@ export default function Home() {
         style={{ fontFamily: '"Plus Jakarta Sans", "Noto Sans", sans-serif' }}>
         <SnakeGame bgcolor="#111811"/>
         <div 
-    className="absolute inset-0 bg-cover bg-center bg-no-repeat saturate-50 pointer-events-none"
-    style={{
-      backgroundImage: 'linear-gradient(rgba(30, 43, 30, 0.3), rgba(30, 43, 30, 0.4)), url("/images/homepage.png")',
-      zIndex: 10,
-      opacity: 0.35
-    }}/>
-
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat saturate-50 pointer-events-none"
+            style={{
+            backgroundImage: 'linear-gradient(rgba(30, 43, 30, 0.3), rgba(30, 43, 30, 0.4)), url("/images/homepage.png")',
+            zIndex: 10,
+            opacity: 0.35
+        }}/>
     </main>
     );
 }
