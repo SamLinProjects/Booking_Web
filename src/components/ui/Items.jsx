@@ -15,6 +15,7 @@ export default function Items({
     end_place = "",
     duration = "",
     price = "",
+    booked = false,
 }) {
     // let detail = false;
     const { postItinerary } = useItineraries();
@@ -155,7 +156,7 @@ export default function Items({
             </div>
             <div className="shrink-0">
                 <p className="text-white text-base font-normal leading-normal">
-                TWD ${formatPrice(price)}
+                {price && `TWD ${formatPrice(price)}`}
                 </p>
             </div>
         </button>
@@ -163,7 +164,7 @@ export default function Items({
         {showDetail && (
             <>
             {console.log("📱 About to render Item_Detail with:", { source, id: itineraryId, description: description?.slice(0, 30) })}
-            <Item_Detail source={source} id={itineraryId} description={description} url={url} cancelDisplay={handleCancelDisplay}/>
+            <Item_Detail Booked={booked} basic={start_time ? start_time : start_place} end_basic={end_time ? end_time : end_place} source={source} id={itineraryId} description={description} url={url} cancelDisplay={handleCancelDisplay} price={price ? price:""}/>
             </>
         )}
         </>
